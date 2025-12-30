@@ -2,153 +2,276 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amalan Yaumi Couple</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sakinah Tracker Premium</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    <script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script> <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
                     colors: {
-                        sage: '#8AA899',
-                        deep: '#2F4F4F',
-                        sand: '#F5F5DC',
-                        gold: '#D4AF37'
+                        gold: {
+                            100: '#F9F1D8',
+                            400: '#D4AF37',
+                            500: '#C5A028',
+                            600: '#B08D55' // Metallic gold
+                        },
+                        midnight: {
+                            900: '#0F172A',
+                            800: '#1E293B',
+                            700: '#334155'
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        'gradient-x': {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' },
+                        }
                     }
                 }
             }
         }
     </script>
-    
+
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #F3F4F6; }
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0F172A; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
+
+        body {
+            background: linear-gradient(-45deg, #0F172A, #1E293B, #0F172A, #2C3E50);
+            background-size: 400% 400%;
+            animation: gradient-x 15s ease infinite;
+            color: #F8FAFC;
         }
-        .check-anim:checked + div {
-            background-color: #8AA899;
-            border-color: #8AA899;
+        
+        /* Glassmorphism Premium */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
-        .check-anim:checked + div svg {
-            display: block;
+
+        .gold-glow {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Particles Background */
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 50px 160px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 90px 40px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            opacity: 0.3;
+            z-index: -1;
+            animation: float 60s linear infinite;
         }
     </style>
 </head>
-<body class="text-gray-800 min-h-screen flex flex-col items-center justify-center bg-[url('https://img.freepik.com/free-vector/white-background-with-islamic-pattern-design_1017-28439.jpg')] bg-cover bg-fixed">
+<body class="antialiased min-h-screen font-sans selection:bg-gold-500 selection:text-white">
+    
+    <div class="stars"></div>
 
-    <div id="login-section" class="w-full max-w-md p-6">
-        <div class="glass rounded-2xl shadow-xl p-8 text-center animate-fade-in-up">
-            <h1 class="text-3xl font-bold text-deep mb-2">بِسْمِ ٱللَّٰهِ</h1>
-            <p class="text-sm text-gray-600 mb-8">Amalan Yaumi Tracker</p>
+    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-midnight-900/90 backdrop-blur-sm transition-all duration-500">
+        <div class="glass-panel w-full max-w-sm rounded-3xl p-8 text-center relative overflow-hidden" data-aos="zoom-in">
+            <div class="absolute top-0 -left-4 w-32 h-32 bg-gold-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+            <div class="absolute top-0 -right-4 w-32 h-32 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+
+            <h1 class="font-serif text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gold-100 to-gold-500 mb-2">Baiti Jannati</h1>
+            <p class="text-gray-400 text-sm mb-8 tracking-wide">Amalan & Muhasabah Tracker</p>
             
-            <div class="space-y-4">
-                <select id="user-select" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sage">
-                    <option value="" disabled selected>Siapa kamu?</option>
-                    <option value="suami">Suami (Saya)</option>
-                    <option value="istri">Istri (Pasangan)</option>
-                </select>
-                
-                <input type="password" id="pin-input" placeholder="Masukkan PIN (1234)" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sage text-center tracking-widest">
-                
-                <button onclick="handleLogin()" class="w-full bg-deep text-white font-bold py-3 rounded-lg hover:bg-sage transition duration-300 shadow-lg">
-                    Masuk <i class="fas fa-arrow-right ml-2"></i>
+            <div class="space-y-4 relative z-10">
+                <div class="relative">
+                    <select id="login-role" class="w-full bg-midnight-800 border border-gray-700 text-white text-sm rounded-xl focus:ring-gold-500 focus:border-gold-500 block w-full p-4 appearance-none cursor-pointer">
+                        <option value="" disabled selected>Pilih Peran</option>
+                        <option value="suami">Suami (Imam)</option>
+                        <option value="istri">Istri (Makmum)</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <input type="password" id="login-pin" placeholder="PIN Akses" class="bg-midnight-800 border border-gray-700 text-white text-sm rounded-xl focus:ring-gold-500 focus:border-gold-500 block w-full p-4 text-center tracking-[0.5em]">
+
+                <button onclick="attemptLogin()" class="w-full text-midnight-900 bg-gradient-to-r from-gold-100 to-gold-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gold-500/50 font-bold rounded-xl text-sm px-5 py-4 text-center transition-all transform hover:scale-[1.02]">
+                    Buka Catatan Amal
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="app-section" class="hidden w-full max-w-lg pb-20">
+    <div id="app-container" class="hidden max-w-md mx-auto pb-24 relative min-h-screen flex flex-col">
         
-        <header class="fixed top-0 w-full max-w-lg z-50 glass shadow-sm px-6 py-4 flex justify-between items-center rounded-b-2xl">
+        <header class="glass-panel sticky top-0 z-40 px-6 py-4 rounded-b-3xl border-t-0 shadow-2xl flex justify-between items-center">
             <div>
-                <h2 class="font-bold text-deep text-lg" id="greeting-text">Assalamu'alaikum</h2>
-                <p class="text-xs text-gray-500" id="current-date">Senin, 1 Jan 2026</p>
+                <h2 class="font-serif text-xl font-bold text-gold-400" id="user-greeting">Ahlan wa Sahlan</h2>
+                <div class="flex items-center space-x-2 text-xs text-gray-400 mt-1">
+                    <i class="far fa-calendar-alt"></i>
+                    <span id="header-date">Loading...</span>
+                </div>
             </div>
-            <button onclick="logout()" class="text-red-400 hover:text-red-600"><i class="fas fa-sign-out-alt"></i></button>
+            <div class="relative group">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gold-400 to-yellow-700 p-[2px]">
+                    <div class="w-full h-full rounded-full bg-midnight-900 flex items-center justify-center">
+                        <i class="fas fa-user text-gold-400"></i>
+                    </div>
+                </div>
+                <button onclick="doLogout()" class="absolute top-10 right-0 hidden group-hover:block bg-red-900 text-white text-xs px-3 py-1 rounded shadow-lg">Logout</button>
+            </div>
         </header>
 
-        <div class="mt-24 px-4 mb-4 flex justify-between items-center">
-             <button onclick="changeDate(-1)" class="w-10 h-10 bg-white rounded-full shadow text-deep"><i class="fas fa-chevron-left"></i></button>
-             <input type="date" id="date-picker" class="bg-transparent border-none font-bold text-deep text-center focus:outline-none" onchange="loadData()">
-             <button onclick="changeDate(1)" class="w-10 h-10 bg-white rounded-full shadow text-deep"><i class="fas fa-chevron-right"></i></button>
+        <div class="mt-6 px-6 flex justify-between items-center" data-aos="fade-down">
+            <button onclick="shiftDate(-1)" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:border-gold-500 transition"><i class="fas fa-chevron-left"></i></button>
+            <input type="date" id="date-input" class="bg-transparent border-none text-white font-serif font-bold text-lg text-center focus:outline-none cursor-pointer" onchange="fetchData()">
+            <button onclick="shiftDate(1)" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:border-gold-500 transition"><i class="fas fa-chevron-right"></i></button>
         </div>
 
-        <div class="px-4 mb-6">
-            <div class="bg-gradient-to-r from-deep to-sage rounded-2xl p-5 text-white shadow-lg relative overflow-hidden">
-                <div class="relative z-10 flex justify-between items-center">
+        <div class="px-6 mt-6">
+            <div class="mb-6 text-center" data-aos="fade-in">
+                <p id="daily-quote" class="font-serif italic text-gold-100 text-sm opacity-80 leading-relaxed">"..."</p>
+            </div>
+
+            <div class="glass-panel rounded-3xl p-6 relative overflow-hidden" data-aos="zoom-in-up">
+                <div class="flex justify-between items-end mb-4">
                     <div>
-                        <p class="text-xs opacity-80">Capaian Bersama Hari Ini</p>
-                        <h3 class="text-3xl font-bold" id="joint-score">0%</h3>
+                        <p class="text-xs text-gray-400 uppercase tracking-widest">Sinergi Hari Ini</p>
+                        <h3 class="text-4xl font-serif font-bold text-white mt-1" id="couple-score">0%</h3>
                     </div>
-                    <div class="text-center">
-                        <i class="fas fa-heart text-4xl text-red-400 animate-pulse"></i>
-                        <p class="text-[10px] mt-1">Sakinah</p>
+                    <div class="text-right">
+                        <span class="px-3 py-1 bg-gold-500/20 border border-gold-500/30 rounded-full text-[10px] text-gold-400 font-bold" id="streak-badge">
+                            🔥 Streak: 0 Hari
+                        </span>
                     </div>
                 </div>
-                <div class="absolute -right-5 -bottom-10 w-32 h-32 bg-white opacity-10 rounded-full blur-xl"></div>
-            </div>
-        </div>
-
-        <div class="flex justify-center space-x-4 mb-6 px-4">
-            <button onclick="switchTab('tracker')" id="btn-tracker" class="flex-1 py-2 rounded-full bg-deep text-white shadow-md transition text-sm font-semibold">Checklist</button>
-            <button onclick="switchTab('stats')" id="btn-stats" class="flex-1 py-2 rounded-full bg-white text-gray-500 shadow-sm transition text-sm font-semibold">Statistik</button>
-        </div>
-
-        <div id="tab-tracker" class="px-4 space-y-4 animate-fade-in">
-            <div class="bg-white rounded-2xl p-5 shadow-sm">
-                <h3 class="font-bold text-deep mb-4 flex items-center">
-                    <i class="fas fa-user-check mr-2 text-sage"></i> Amalanku
-                </h3>
-                <div id="amalan-list" class="space-y-3">
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between text-[10px] text-gray-400 mb-1">
+                            <span>Saya</span>
+                            <span id="my-score-text">0%</span>
+                        </div>
+                        <div class="h-2 w-full bg-midnight-900 rounded-full overflow-hidden">
+                            <div id="bar-me" class="h-full bg-gradient-to-r from-teal-400 to-teal-600 transition-all duration-1000" style="width: 0%"></div>
+                        </div>
                     </div>
-            </div>
-
-            <div class="bg-white/60 rounded-2xl p-5 shadow-sm border border-white">
-                <h3 class="font-bold text-gray-500 mb-2 text-sm flex items-center">
-                    <i class="fas fa-user-friends mr-2"></i> Progress Pasangan
-                </h3>
-                <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
-                    <div id="partner-progress-bar" class="bg-sage h-4 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                    <div>
+                        <div class="flex justify-between text-[10px] text-gray-400 mb-1">
+                            <span>Pasangan</span>
+                            <span id="partner-score-text">0%</span>
+                        </div>
+                        <div class="h-2 w-full bg-midnight-900 rounded-full overflow-hidden">
+                            <div id="bar-partner" class="h-full bg-gradient-to-r from-pink-400 to-pink-600 transition-all duration-1000" style="width: 0%"></div>
+                        </div>
+                    </div>
                 </div>
-                <p class="text-xs text-right text-gray-500" id="partner-status">Pasanganmu belum mengisi.</p>
             </div>
         </div>
 
-        <div id="tab-stats" class="px-4 hidden animate-fade-in">
-            <div class="bg-white rounded-2xl p-4 shadow-sm mb-4">
-                <h3 class="font-bold text-deep mb-4 text-center">Grafik Mingguan (Kita)</h3>
-                <canvas id="weeklyChart"></canvas>
+        <div class="px-6 mt-8">
+            <div class="flex p-1 bg-midnight-800 rounded-xl relative">
+                <div id="tab-bg" class="absolute left-1 top-1 w-[32%] h-[calc(100%-8px)] bg-gold-600 rounded-lg shadow-lg transition-all duration-300"></div>
+                <button onclick="setTab('tracker')" class="flex-1 relative z-10 py-2 text-xs font-bold text-white text-center">Amalan</button>
+                <button onclick="setTab('stats')" class="flex-1 relative z-10 py-2 text-xs font-bold text-gray-400 text-center hover:text-white transition">Statistik</button>
+                <button onclick="setTab('muhasabah')" class="flex-1 relative z-10 py-2 text-xs font-bold text-gray-400 text-center hover:text-white transition">Muhasabah</button>
+            </div>
+        </div>
+
+        <div id="view-tracker" class="px-6 mt-6 space-y-4 pb-10">
+            </div>
+
+        <div id="view-stats" class="px-6 mt-6 hidden space-y-6 pb-10">
+            <div class="glass-panel p-4 rounded-2xl" data-aos="fade-up">
+                <h3 class="font-serif text-gold-400 mb-4 text-sm">Grafik 7 Hari Terakhir</h3>
+                <canvas id="weeklyChart" height="200"></canvas>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass-panel p-4 rounded-2xl text-center" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-10 h-10 mx-auto bg-midnight-900 rounded-full flex items-center justify-center text-teal-400 mb-2">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                    <p class="text-[10px] text-gray-400">Total Pekan Ini</p>
+                    <h4 class="text-2xl font-bold text-white" id="stat-total-week">0</h4>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl text-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-10 h-10 mx-auto bg-midnight-900 rounded-full flex items-center justify-center text-gold-400 mb-2">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <p class="text-[10px] text-gray-400">Level</p>
+                    <h4 class="text-sm font-bold text-white mt-1" id="user-badge">Mujahid Pemula</h4>
+                </div>
+            </div>
+
+             <div class="glass-panel p-4 rounded-2xl" data-aos="fade-up" data-aos-delay="300">
+                <h3 class="font-serif text-white mb-2 text-sm">Konsistensi Bulan Ini</h3>
+                <div class="flex justify-between items-end h-12 space-x-1" id="monthly-bars">
+                    </div>
+             </div>
+        </div>
+
+        <div id="view-muhasabah" class="px-6 mt-6 hidden pb-10">
+            <div class="glass-panel rounded-2xl p-6" data-aos="fade-up">
+                <h3 class="font-serif text-white mb-2"><i class="fas fa-pen-nib text-gold-400 mr-2"></i>Catatan Hati</h3>
+                <p class="text-xs text-gray-400 mb-4">Apa yang kamu syukuri atau sesali hari ini?</p>
+                <textarea id="muhasabah-input" class="w-full h-32 bg-midnight-900/50 border border-gray-600 rounded-xl p-4 text-sm text-white focus:border-gold-500 focus:ring-1 focus:ring-gold-500 outline-none resize-none transition" placeholder="Tulis di sini..."></textarea>
+                <button onclick="saveMuhasabah()" class="mt-4 w-full bg-gold-600 text-white py-2 rounded-lg text-sm font-bold shadow-lg hover:bg-gold-500 transition">Simpan Catatan</button>
             </div>
             
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white rounded-2xl p-4 shadow-sm text-center">
-                    <p class="text-xs text-gray-500">Total Pekan Ini</p>
-                    <h4 class="text-xl font-bold text-sage" id="stat-weekly-total">0</h4>
-                    <p class="text-[10px]">Amalan Tuntas</p>
-                </div>
-                <div class="bg-white rounded-2xl p-4 shadow-sm text-center">
-                    <p class="text-xs text-gray-500">Streak</p>
-                    <h4 class="text-xl font-bold text-gold" id="stat-streak">0</h4>
-                    <p class="text-[10px]">Hari Berturut</p>
-                </div>
+            <div class="mt-6 glass-panel rounded-2xl p-6 opacity-80" data-aos="fade-up" data-aos-delay="100">
+                 <h3 class="font-serif text-gray-300 mb-2 text-sm">Catatan Pasangan</h3>
+                 <p class="text-sm italic text-gray-400" id="partner-note">"Belum ada catatan..."</p>
             </div>
         </div>
-        
+
     </div>
 
     <script type="module">
-        // --- 1. CONFIGURATION ---
+        // --- AOS INIT ---
+        AOS.init({ duration: 800, once: true });
+
+        // --- FIREBASE CONFIG (WAJIB DIISI) ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // GANTI BAGIAN INI DENGAN CONFIG DARI FIREBASE CONSOLE KAMU
         const firebaseConfig = {
             apiKey: "AIzaSyDtuBXr5lOOzoPQeCX2nIRVtWkQ0jW3o1Q",
             authDomain: "amalan-couple.firebaseapp.com",
@@ -159,212 +282,291 @@
             measurementId: "G-LREQGQHSWS"
         };
 
-        // Initialize Firebase
+        // --- STATE MANAGEMENT ---
         let db;
         try {
             const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
-            console.log("Firebase connected");
-        } catch (e) {
-            console.error("Firebase config missing. Please edit the code.", e);
-            alert("Harap masukkan konfigurasi Firebase di dalam kode (line 155) agar aplikasi berjalan.");
+        } catch(e) {
+            console.error("Firebase config error");
         }
 
-        // --- 2. DATA & STATE ---
-        const amalanItems = [
-            { id: 1, label: "Ngaji 2 Halaman", icon: "fa-book-quran" },
-            { id: 2, label: "Baca Al Waqiah", icon: "fa-book-open" },
-            { id: 3, label: "Qiyamul Lail", icon: "fa-moon" },
-            { id: 4, label: "Sholat Dhuha", icon: "fa-sun" },
-            { id: 5, label: "Al Matsurat Pagi", icon: "fa-cloud-sun" },
-            { id: 6, label: "Al Matsurat Petang", icon: "fa-cloud-moon" },
-            { id: 7, label: "Sedekah", icon: "fa-hand-holding-heart" }
+        const amalanList = [
+            { id: 1, text: "Tilawah 1 Lembar", icon: "fa-quran", desc: "Halaman 2" },
+            { id: 2, text: "Al Waqiah", icon: "fa-book-open", desc: "Pembuka Rezeki" },
+            { id: 3, text: "Qiyamul Lail", icon: "fa-star-and-crescent", desc: "Minimal 2 Rakaat" },
+            { id: 4, text: "Sholat Dhuha", icon: "fa-sun", desc: "Sedekah Sendi" },
+            { id: 5, text: "Al Matsurat Pagi", icon: "fa-cloud-sun", desc: "Dzikir Pagi" },
+            { id: 6, text: "Al Matsurat Petang", icon: "fa-cloud-moon", desc: "Dzikir Petang" },
+            { id: 7, text: "Sedekah", icon: "fa-hand-holding-heart", desc: "Harta atau Senyum" }
         ];
 
-        let currentUser = null; // 'suami' or 'istri'
+        const quotes = [
+            "Maka nikmat Tuhanmu yang manakah yang kamu dustakan?",
+            "Sesungguhnya bersama kesulitan ada kemudahan.",
+            "Dunia ini perhiasan, dan sebaik-baik perhiasan adalah wanita sholehah.",
+            "Sholat adalah tiang agama."
+        ];
+
+        let currentUser = localStorage.getItem('ay_user') || null;
         let currentDate = new Date().toISOString().split('T')[0];
-        let myChart = null;
+        let chartInstance = null;
 
-        // --- 3. DOM ELEMENTS ---
-        const loginSection = document.getElementById('login-section');
-        const appSection = document.getElementById('app-section');
-        const datePicker = document.getElementById('date-picker');
-
-        // Set default date
-        datePicker.value = currentDate;
-        document.getElementById('current-date').innerText = new Date(currentDate).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-        // --- 4. FUNCTIONS ---
-
-        window.handleLogin = function() {
-            const user = document.getElementById('user-select').value;
-            const pin = document.getElementById('pin-input').value;
-
-            if (!user) return alert("Pilih pengguna dulu.");
-            if (pin !== "1234") return alert("PIN Salah!"); // Simple PIN
-
-            currentUser = user;
-            localStorage.setItem('currentUser', user);
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            document.getElementById('date-input').value = currentDate;
+            document.getElementById('daily-quote').innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
             
-            // UI Transition
-            loginSection.classList.add('hidden');
-            appSection.classList.remove('hidden');
+            if(currentUser) {
+                showApp();
+            } else {
+                document.getElementById('login-screen').classList.remove('hidden');
+            }
+        };
+
+        // --- AUTH FUNCTIONS ---
+        window.attemptLogin = function() {
+            const role = document.getElementById('login-role').value;
+            const pin = document.getElementById('login-pin').value;
             
-            document.getElementById('greeting-text').innerText = `Ahlan wa Sahlan, ${user === 'suami' ? 'Habibi' : 'Humaira'}`;
+            if(!role) return Swal.fire({ icon: 'error', title: 'Oops', text: 'Pilih peran dulu ya!', background: '#1E293B', color: '#fff' });
+            if(pin !== "1234") return Swal.fire({ icon: 'error', title: 'Salah PIN', text: 'Coba ingat-ingat lagi.', background: '#1E293B', color: '#fff' });
+
+            currentUser = role;
+            localStorage.setItem('ay_user', role);
             
-            renderAmalanList();
-            loadData(); // Load data from Firestore
-            renderChart();
+            const loginScreen = document.getElementById('login-screen');
+            loginScreen.classList.add('opacity-0');
+            setTimeout(() => {
+                loginScreen.classList.add('hidden');
+                showApp();
+            }, 500);
         }
 
-        // Check if logged in previously
-        if(localStorage.getItem('currentUser')) {
-            document.getElementById('user-select').value = localStorage.getItem('currentUser');
-            // Auto login logic could go here, but kept manual for demo
-        }
-
-        window.logout = function() {
-            localStorage.removeItem('currentUser');
+        window.doLogout = function() {
+            localStorage.removeItem('ay_user');
             location.reload();
         }
 
-        window.changeDate = function(days) {
-            const date = new Date(datePicker.value);
-            date.setDate(date.getDate() + days);
-            datePicker.value = date.toISOString().split('T')[0];
-            datePicker.dispatchEvent(new Event('change'));
-        }
-
-        window.switchTab = function(tabName) {
-            document.getElementById('tab-tracker').classList.add('hidden');
-            document.getElementById('tab-stats').classList.add('hidden');
-            document.getElementById('btn-tracker').classList.replace('bg-deep', 'bg-white');
-            document.getElementById('btn-tracker').classList.replace('text-white', 'text-gray-500');
-            document.getElementById('btn-stats').classList.replace('bg-deep', 'bg-white');
-            document.getElementById('btn-stats').classList.replace('text-white', 'text-gray-500');
-
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-            document.getElementById(`btn-${tabName}`).classList.replace('bg-white', 'bg-deep');
-            document.getElementById(`btn-${tabName}`).classList.replace('text-gray-500', 'text-white');
-        }
-
-        function renderAmalanList() {
-            const container = document.getElementById('amalan-list');
-            container.innerHTML = '';
+        function showApp() {
+            document.getElementById('app-container').classList.remove('hidden');
+            document.getElementById('user-greeting').innerText = currentUser === 'suami' ? "Assalamu'alaikum, Imamku" : "Assalamu'alaikum, Bidadariku";
             
-            amalanItems.forEach(item => {
+            // Format Date UI
+            const d = new Date(currentDate);
+            const options = { weekday: 'long', day: 'numeric', month: 'long' };
+            document.getElementById('header-date').innerText = d.toLocaleDateString('id-ID', options);
+
+            renderTracker();
+            fetchData();
+            initCharts();
+            generateMonthlyBars();
+        }
+
+        // --- NAVIGATION ---
+        window.shiftDate = function(delta) {
+            const d = new Date(document.getElementById('date-input').value);
+            d.setDate(d.getDate() + delta);
+            currentDate = d.toISOString().split('T')[0];
+            document.getElementById('date-input').value = currentDate;
+            
+            // Update UI Header Date
+            const options = { weekday: 'long', day: 'numeric', month: 'long' };
+            document.getElementById('header-date').innerText = d.toLocaleDateString('id-ID', options);
+
+            fetchData();
+        }
+
+        window.setTab = function(tab) {
+            // Hide all
+            ['tracker', 'stats', 'muhasabah'].forEach(t => document.getElementById(`view-${t}`).classList.add('hidden'));
+            // Show target
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            
+            // Animate Background Tab
+            const bg = document.getElementById('tab-bg');
+            if(tab === 'tracker') bg.style.transform = 'translateX(0%)';
+            if(tab === 'stats') bg.style.transform = 'translateX(100%)'; // Rough math for 3 items
+            if(tab === 'muhasabah') bg.style.transform = 'translateX(200%)';
+
+            // Re-trigger animations if needed
+            if(tab === 'stats') {
+                updateChartData(); // Refresh chart visuals
+            }
+        }
+
+        // --- CORE LOGIC ---
+        function renderTracker() {
+            const container = document.getElementById('view-tracker');
+            container.innerHTML = '';
+
+            amalanList.forEach((item, index) => {
+                const delay = index * 50;
                 const html = `
-                    <label class="flex items-center cursor-pointer relative group">
-                        <input type="checkbox" class="check-anim sr-only" id="amalan-${item.id}" onchange="toggleAmalan(${item.id})">
-                        <div class="w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center mr-4 transition-colors duration-200">
-                            <svg class="w-4 h-4 text-white hidden fill-current pointer-events-none" viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/></svg>
+                <div class="glass-panel rounded-2xl p-4 flex items-center justify-between group transition-all duration-300 hover:bg-midnight-700/50" data-aos="fade-up" data-aos-delay="${delay}">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-full bg-midnight-900 flex items-center justify-center text-gold-500 shadow-inner">
+                            <i class="fas ${item.icon}"></i>
                         </div>
-                        <div class="flex-1 p-3 bg-white border border-gray-100 rounded-lg shadow-sm group-hover:bg-gray-50 transition flex items-center justify-between">
-                            <span class="text-sm font-medium text-gray-700">${item.label}</span>
-                            <i class="fas ${item.icon} text-sage opacity-50"></i>
+                        <div>
+                            <h4 class="font-bold text-gray-200 text-sm">${item.text}</h4>
+                            <p class="text-[10px] text-gray-500">${item.desc}</p>
                         </div>
+                    </div>
+                    
+                    <label class="cursor-pointer relative">
+                        <input type="checkbox" id="check-${item.id}" class="peer sr-only" onchange="toggleAmalan(${item.id})">
+                        <div class="w-6 h-6 border-2 border-gray-600 rounded-full peer-checked:bg-gold-500 peer-checked:border-gold-500 transition-all shadow-lg flex items-center justify-center">
+                            <i class="fas fa-check text-white text-xs opacity-0 peer-checked:opacity-100 transform scale-50 peer-checked:scale-100 transition-transform"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-gold-400 blur-lg opacity-0 peer-checked:opacity-40 transition-opacity duration-500"></div>
                     </label>
-                `;
+                </div>`;
                 container.insertAdjacentHTML('beforeend', html);
             });
         }
 
-        // --- 5. FIREBASE LOGIC ---
-
-        window.loadData = function() {
-            if (!db || !currentUser) return;
-            currentDate = datePicker.value;
+        window.fetchData = function() {
+            if(!db) return; // Fallback offline mode visual only
             
-            // Format Document ID: YYYY-MM-DD
             const docRef = doc(db, "daily_logs", currentDate);
-
-            // Realtime Listener
+            
             onSnapshot(docRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    updateUI(data);
-                } else {
-                    // Reset UI if no data
-                    updateUI({});
-                }
+                const data = docSnap.exists() ? docSnap.data() : {};
+                updateUI(data);
             });
         }
 
         window.toggleAmalan = async function(id) {
-            if (!db || !currentUser) return;
-            
-            const checkbox = document.getElementById(`amalan-${id}`);
+            if(!db) return Swal.fire("Mode Offline", "Fitur simpan butuh config Firebase", "warning");
+
+            const checkbox = document.getElementById(`check-${id}`);
             const isChecked = checkbox.checked;
             
             const docRef = doc(db, "daily_logs", currentDate);
             
-            // Kita perlu mengambil data lama dulu agar tidak menimpa data pasangan
+            // Read first to preserve partner data
             const docSnap = await getDoc(docRef);
             let currentData = docSnap.exists() ? docSnap.data() : {};
             
-            // Siapkan struktur data user ini
-            if (!currentData[currentUser]) currentData[currentUser] = [];
-            
-            if (isChecked) {
-                if (!currentData[currentUser].includes(id)) currentData[currentUser].push(id);
+            if(!currentData[currentUser]) currentData[currentUser] = [];
+
+            if(isChecked) {
+                if(!currentData[currentUser].includes(id)) currentData[currentUser].push(id);
+                // Sound effect or vibration could go here
             } else {
-                currentData[currentUser] = currentData[currentUser].filter(item => item !== id);
+                currentData[currentUser] = currentData[currentUser].filter(x => x !== id);
             }
-            
-            // Simpan ke Firestore
+
             await setDoc(docRef, currentData, { merge: true });
         }
 
-        function updateUI(data) {
-            // 1. Update My Checkboxes
-            const myData = data[currentUser] || [];
-            amalanItems.forEach(item => {
-                document.getElementById(`amalan-${item.id}`).checked = myData.includes(item.id);
+        window.saveMuhasabah = async function() {
+            const text = document.getElementById('muhasabah-input').value;
+            const docRef = doc(db, "daily_logs", currentDate);
+            
+            await setDoc(docRef, {
+                [`${currentUser}_note`]: text
+            }, { merge: true });
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Tercatat',
+                text: 'Semoga hari esok lebih baik.',
+                background: '#1E293B', color: '#fff',
+                timer: 1500, showConfirmButton: false
             });
-
-            // 2. Update Partner Progress
-            const partnerName = currentUser === 'suami' ? 'istri' : 'suami';
-            const partnerData = data[partnerName] || [];
-            const partnerPercent = Math.round((partnerData.length / amalanItems.length) * 100);
-            
-            document.getElementById('partner-progress-bar').style.width = `${partnerPercent}%`;
-            document.getElementById('partner-status').innerText = `${partnerPercent}% selesai (${partnerData.length}/${amalanItems.length})`;
-
-            // 3. Update Joint Score
-            const myPercent = Math.round((myData.length / amalanItems.length) * 100);
-            const jointScore = Math.round((myPercent + partnerPercent) / 2);
-            document.getElementById('joint-score').innerText = `${jointScore}%`;
-            
-            updateChart(myPercent, partnerPercent);
         }
 
-        // --- 6. CHARTS ---
-        function renderChart() {
+        function updateUI(data) {
+            const myData = data[currentUser] || [];
+            const partnerUser = currentUser === 'suami' ? 'istri' : 'suami';
+            const partnerData = data[partnerUser] || [];
+
+            // 1. Update Checkboxes
+            amalanList.forEach(item => {
+                document.getElementById(`check-${item.id}`).checked = myData.includes(item.id);
+            });
+
+            // 2. Update Progress Bars
+            const total = amalanList.length;
+            const myPct = Math.round((myData.length / total) * 100);
+            const ptnPct = Math.round((partnerData.length / total) * 100);
+            
+            document.getElementById('bar-me').style.width = `${myPct}%`;
+            document.getElementById('my-score-text').innerText = `${myPct}%`;
+            
+            document.getElementById('bar-partner').style.width = `${ptnPct}%`;
+            document.getElementById('partner-score-text').innerText = `${ptnPct}%`;
+
+            // 3. Update Couple Score
+            const avg = Math.round((myPct + ptnPct) / 2);
+            document.getElementById('couple-score').innerText = `${avg}%`;
+
+            // 4. Update Badge (Mockup Logic)
+            let badge = "Mujahid Pemula";
+            if(myPct > 50) badge = "Hamba Istiqomah";
+            if(myPct === 100) badge = "Ahli Surga (InsyaAllah)";
+            document.getElementById('user-badge').innerText = badge;
+
+            // 5. Update Notes
+            const partnerNote = data[`${partnerUser}_note`];
+            document.getElementById('partner-note').innerText = partnerNote ? `"${partnerNote}"` : "Belum ada catatan...";
+            document.getElementById('muhasabah-input').value = data[`${currentUser}_note`] || "";
+        }
+
+        // --- CHARTS & STATS (VISUAL ONLY FOR DEMO) ---
+        function initCharts() {
             const ctx = document.getElementById('weeklyChart').getContext('2d');
-            myChart = new Chart(ctx, {
-                type: 'bar',
+            chartInstance = new Chart(ctx, {
+                type: 'line',
                 data: {
-                    labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Ahd'], // Harusnya dinamis berdasarkan tanggal
+                    labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Ahd'],
                     datasets: [
-                        { label: 'Saya', data: [0,0,0,0,0,0,0], backgroundColor: '#8AA899' },
-                        { label: 'Pasangan', data: [0,0,0,0,0,0,0], backgroundColor: '#D4AF37' }
+                        {
+                            label: 'Saya',
+                            data: [65, 59, 80, 81, 56, 55, 40], // Dummy Data
+                            borderColor: '#2dd4bf', // Teal
+                            backgroundColor: 'rgba(45, 212, 191, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Pasangan',
+                            data: [28, 48, 40, 19, 86, 27, 90], // Dummy Data
+                            borderColor: '#F472B6', // Pink
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        }
                     ]
                 },
                 options: {
                     responsive: true,
-                    scales: { y: { beginAtZero: true, max: 100 } }
+                    plugins: { legend: { labels: { color: '#cbd5e1' } } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+                        x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                    }
                 }
             });
         }
 
-        function updateChart(myVal, partnerVal) {
-            // Note: Untuk chart riil, kita perlu query collection range tanggal.
-            // Di contoh ini, kita hanya update hari ini secara dummy visual.
-            if(myChart) {
-                // Simulasi update data terakhir
-                myChart.data.datasets[0].data[6] = myVal;
-                myChart.data.datasets[1].data[6] = partnerVal;
-                myChart.update();
+        function updateChartData() {
+            // In real app, query last 7 days from Firestore here
+            // chartInstance.update();
+        }
+
+        function generateMonthlyBars() {
+            const container = document.getElementById('monthly-bars');
+            container.innerHTML = '';
+            // Generate 30 random bars visual
+            for(let i=0; i<30; i++) {
+                const h = Math.floor(Math.random() * 100);
+                const color = h > 80 ? 'bg-gold-500' : (h > 50 ? 'bg-teal-500' : 'bg-gray-700');
+                const div = document.createElement('div');
+                div.className = `flex-1 rounded-t-sm ${color} opacity-80 hover:opacity-100 transition`;
+                div.style.height = `${h}%`;
+                container.appendChild(div);
             }
         }
     </script>
