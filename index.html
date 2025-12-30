@@ -7,22 +7,17 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lateef&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
 
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
-                fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
-                    arabic: ['Lateef', 'serif'],
-                },
+                fontFamily: { sans: ['Inter', 'sans-serif'], arabic: ['Lateef', 'serif'] },
                 extend: {
                     colors: {
                         slate: { 850: '#151F32', 900: '#0F172A' },
@@ -35,25 +30,25 @@
     <style>
         [x-cloak] { display: none !important; }
         body { background-color: #0F172A; color: #E2E8F0; }
-        
-        /* Loading Animation Simple */
-        .loader-ring {
-            display: inline-block; width: 64px; height: 64px;
-        }
-        .loader-ring:after {
-            content: " "; display: block; width: 46px; height: 46px; margin: 8px; border-radius: 50%;
-            border: 5px solid #fff; border-color: #10B981 transparent #10B981 transparent;
-            animation: ring 1.2s linear infinite;
-        }
+        .loader-ring { display: inline-block; width: 64px; height: 64px; }
+        .loader-ring:after { content: " "; display: block; width: 46px; height: 46px; margin: 8px; border-radius: 50%; border: 5px solid #fff; border-color: #10B981 transparent #10B981 transparent; animation: ring 1.2s linear infinite; }
         @keyframes ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col relative">
+<body class="antialiased min-h-screen flex flex-col relative bg-slate-900">
 
     <div id="initial-loader" class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="loader-ring"></div>
         <p class="mt-4 text-emerald-500 font-mono text-sm animate-pulse">Menghubungkan Database...</p>
+        <button onclick="document.getElementById('initial-loader').style.display='none'" class="mt-8 text-xs text-slate-500 underline hover:text-white" style="display:none" id="force-enter">
+            Masuk Paksa (Mode Offline)
+        </button>
     </div>
+
+    <script>
+        // Tampilkan tombol darurat jika loading > 5 detik
+        setTimeout(() => { document.getElementById('force-enter').style.display = 'block'; }, 5000);
+    </script>
 
     <div x-data="mainApp" x-cloak class="flex-1 flex flex-col h-screen overflow-hidden">
 
@@ -64,7 +59,6 @@
                 </div>
                 <h2 class="text-xl font-bold text-white mb-1">Yaumi Tracker</h2>
                 <p class="text-slate-400 text-sm mb-6">Baiti Jannati</p>
-                
                 <div class="space-y-3">
                     <select x-model="loginForm.role" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:border-emerald-500 focus:outline-none transition text-white">
                         <option value="" disabled selected>Pilih Pengguna</option>
@@ -72,32 +66,25 @@
                         <option value="istri">Istri</option>
                     </select>
                     <input type="password" x-model="loginForm.pin" placeholder="PIN (1234)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-center tracking-widest focus:border-emerald-500 focus:outline-none transition text-white">
-                    <button @click="login()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-3 rounded-lg transition shadow-lg shadow-emerald-900/20">
-                        Masuk Dashboard
-                    </button>
+                    <button @click="login()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-3 rounded-lg transition shadow-lg shadow-emerald-900/20">Masuk</button>
                 </div>
             </div>
         </div>
 
         <div x-show="currentUser" class="flex-1 flex flex-col md:flex-row overflow-hidden">
-            
             <aside class="w-full md:w-64 bg-slate-800 border-b md:border-b-0 md:border-r border-slate-700 flex flex-col justify-between z-20 shrink-0">
                 <div class="p-6">
                     <div class="flex items-center space-x-3 mb-8">
                         <div class="w-8 h-8 rounded bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-slate-900 font-bold">Y</div>
                         <span class="font-bold text-lg tracking-tight text-white">Yaumi<span class="text-emerald-500">Dash</span></span>
                     </div>
-
                     <div class="flex items-center space-x-3 p-3 bg-slate-700/50 rounded-lg mb-6 border border-slate-600">
-                        <div class="w-10 h-10 rounded-full bg-slate-600 flex items-center justify-center text-slate-300">
-                            <i class="fas fa-user"></i>
-                        </div>
+                        <div class="w-10 h-10 rounded-full bg-slate-600 flex items-center justify-center text-slate-300"><i class="fas fa-user"></i></div>
                         <div>
                             <p class="text-xs text-slate-400 uppercase font-semibold">Login Sebagai</p>
                             <p class="text-sm font-medium text-white capitalize" x-text="currentUser"></p>
                         </div>
                     </div>
-
                     <div class="space-y-2">
                         <label class="text-xs text-slate-500 font-semibold uppercase">Tanggal</label>
                         <div class="flex items-center bg-slate-900 rounded-lg border border-slate-700 p-1">
@@ -108,37 +95,26 @@
                         <p class="text-xs text-center text-slate-500 mt-1" x-text="formattedDate"></p>
                     </div>
                 </div>
-
                 <div class="p-4 border-t border-slate-700 md:block hidden">
-                    <button @click="logout()" class="flex items-center text-slate-400 hover:text-red-400 transition text-sm space-x-2 w-full p-2">
-                        <i class="fas fa-sign-out-alt"></i> <span>Keluar</span>
-                    </button>
+                    <button @click="logout()" class="flex items-center text-slate-400 hover:text-red-400 transition text-sm space-x-2 w-full p-2"><i class="fas fa-sign-out-alt"></i> <span>Keluar</span></button>
                 </div>
             </aside>
 
             <main class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-900">
                 <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6">
-                    
                     <div class="md:col-span-5 lg:col-span-4 space-y-6">
                         <div class="flex items-center justify-between">
                             <h2 class="text-xl font-bold text-white">Amalan Harian</h2>
                             <span class="text-xs bg-emerald-500/10 text-emerald-500 px-2 py-1 rounded border border-emerald-500/20" x-text="progressPercent + '% Selesai'"></span>
                         </div>
-
                         <div class="w-full bg-slate-800 rounded-full h-2">
                             <div class="bg-emerald-500 h-2 rounded-full transition-all duration-500" :style="`width: ${progressPercent}%`"></div>
                         </div>
-
                         <div class="space-y-3">
                             <template x-for="item in amalanList" :key="item.id">
-                                <div 
-                                    @click="toggleAmalan(item.id)"
-                                    class="group flex items-center justify-between p-4 rounded-xl border border-slate-700 cursor-pointer transition-all duration-200 hover:border-emerald-500/50"
-                                    :class="isChecked(item.id) ? 'bg-emerald-900/10 border-emerald-500/50' : 'bg-slate-800'"
-                                >
+                                <div @click="toggleAmalan(item.id)" class="group flex items-center justify-between p-4 rounded-xl border border-slate-700 cursor-pointer transition-all duration-200 hover:border-emerald-500/50" :class="isChecked(item.id) ? 'bg-emerald-900/10 border-emerald-500/50' : 'bg-slate-800'">
                                     <div class="flex items-center space-x-4">
-                                        <div class="w-5 h-5 rounded border flex items-center justify-center transition-colors"
-                                             :class="isChecked(item.id) ? 'bg-emerald-500 border-emerald-500' : 'border-slate-500 bg-slate-900'">
+                                        <div class="w-5 h-5 rounded border flex items-center justify-center transition-colors" :class="isChecked(item.id) ? 'bg-emerald-500 border-emerald-500' : 'border-slate-500 bg-slate-900'">
                                             <i class="fas fa-check text-white text-xs" x-show="isChecked(item.id)"></i>
                                         </div>
                                         <span class="text-sm font-medium text-slate-200" :class="{ 'line-through text-slate-500': isChecked(item.id) }" x-text="item.text"></span>
@@ -148,44 +124,24 @@
                             </template>
                         </div>
                     </div>
-
                     <div class="md:col-span-7 lg:col-span-8 space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 relative overflow-hidden">
-                                <div class="absolute top-0 right-0 p-3 opacity-10"><i class="fas fa-chart-pie text-6xl"></i></div>
                                 <p class="text-slate-400 text-xs font-semibold uppercase mb-1">Peforma Gabungan</p>
-                                <div class="flex items-baseline space-x-2">
-                                    <h3 class="text-3xl font-bold text-white" x-text="jointScore + '%'"></h3>
-                                </div>
+                                <h3 class="text-3xl font-bold text-white" x-text="jointScore + '%'"></h3>
                                 <div class="mt-4 flex gap-1 h-1.5 w-full bg-slate-700 rounded-full overflow-hidden">
                                     <div class="bg-emerald-500" :style="`width: ${myScore}%`"></div>
                                     <div class="bg-blue-500" :style="`width: ${partnerScore}%`"></div>
                                 </div>
-                                <div class="flex justify-between mt-2 text-[10px] text-slate-500">
-                                    <span>Saya</span>
-                                    <span>Pasangan</span>
-                                </div>
                             </div>
-
-                            <div class="md:col-span-2 bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700 flex flex-col justify-center relative group hover:border-emerald-500/30 transition">
-                                <div class="absolute top-4 right-4 text-emerald-500/20"><i class="fas fa-book-open text-4xl"></i></div>
+                            <div class="md:col-span-2 bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700 flex flex-col justify-center relative">
                                 <span class="inline-block px-2 py-1 bg-emerald-900/30 text-emerald-400 text-[10px] font-bold uppercase rounded mb-3 w-max">One Day One Hadith</span>
-                                <p class="font-serif text-lg text-slate-200 leading-relaxed italic" x-text="`&quot;` + todayHadith.text + `&quot;`"></p>
+                                <p class="font-serif text-lg text-slate-200 italic" x-text="`&quot;` + todayHadith.text + `&quot;`"></p>
                                 <p class="text-xs text-slate-400 mt-2 font-semibold" x-text="todayHadith.source"></p>
                             </div>
                         </div>
-
                         <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="font-bold text-white text-sm">Grafik Peforma</h3>
-                                <div class="flex space-x-4 text-xs">
-                                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span>Saya</span>
-                                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span>Pasangan</span>
-                                </div>
-                            </div>
-                            <div class="h-64 w-full">
-                                <canvas id="mainChart"></canvas>
-                            </div>
+                             <div class="h-64 w-full"><canvas id="mainChart"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -194,10 +150,12 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        // 1. IMPORT FIREBASE DARI CDN (BUKAN BARE IMPORT)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Konfigurasi Firebase Anda
+        // 2. CONFIG FIREBASE ANDA
         const firebaseConfig = {
             apiKey: "AIzaSyDtuBXr5lOOzoPQeCX2nIRVtWkQ0jW3o1Q",
             authDomain: "amalan-couple.firebaseapp.com",
@@ -208,31 +166,25 @@
             measurementId: "G-LREQGQHSWS"
         };
 
-        // Inisialisasi Firebase
+        // 3. INIT FIREBASE
         let db;
         try {
             const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            console.log("Firebase Connected");
+            const analytics = getAnalytics(app); // Analytics dimuat
+            db = getFirestore(app); // DATABASE WAJIB DIMUAT
+            console.log("Firebase Connected Successfully");
         } catch(e) {
-            console.error("Firebase Error", e);
-            alert("Gagal koneksi database. Cek console.");
+            console.error("Firebase Error:", e);
         }
 
-        // --- ALPINE.JS LOGIC ---
-        // Kita menunggu event 'alpine:init' agar aman
+        // 4. ALPINE JS LOGIC
         document.addEventListener('alpine:init', () => {
-            
             Alpine.data('mainApp', () => ({
                 currentUser: localStorage.getItem('ay_user') || null,
                 currentDate: new Date().toISOString().split('T')[0],
                 loginForm: { role: '', pin: '' },
+                myData: [], partnerData: [],
                 
-                // Data Lokal
-                myData: [],
-                partnerData: [],
-                
-                // Master Data
                 amalanList: [
                     { id: 1, text: "Ngaji 2 Halaman", icon: "fas fa-quran" },
                     { id: 2, text: "Baca Al Waqiah", icon: "fas fa-book-open" },
@@ -243,149 +195,82 @@
                     { id: 7, text: "Sedekah", icon: "fas fa-hand-holding-heart" }
                 ],
                 hadithCollection: [
-                    { text: "Barangsiapa yang menempuh satu jalan untuk menuntut ilmu, maka Allah SWT akan memudahkan baginya jalan menuju surga.", source: "HR. Muslim" },
                     { text: "Senyummu di hadapan saudaramu adalah sedekah bagimu.", source: "HR. Tirmidzi" },
                     { text: "Sebaik-baik kalian adalah yang paling baik akhlaknya.", source: "HR. Bukhari" },
-                    { text: "Amalan yang paling dicintai Allah adalah yang terus menerus (istiqomah) meskipun sedikit.", source: "HR. Bukhari & Muslim" }
+                    { text: "Amalan yang paling dicintai Allah adalah yang terus menerus (istiqomah).", source: "HR. Muslim" }
                 ],
                 chart: null,
 
-                // Computed Properties
                 get progressPercent() { return Math.round((this.myData.length / this.amalanList.length) * 100); },
                 get myScore() { return this.progressPercent; },
                 get partnerScore() { return Math.round((this.partnerData.length / this.amalanList.length) * 100); },
                 get jointScore() { return Math.round((this.myScore + this.partnerScore) / 2); },
-                get formattedDate() {
-                    const d = new Date(this.currentDate);
-                    return d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-                },
-                get todayHadith() {
-                    const day = new Date(this.currentDate).getDate();
-                    return this.hadithCollection[day % this.hadithCollection.length];
-                },
+                get formattedDate() { return new Date(this.currentDate).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); },
+                get todayHadith() { return this.hadithCollection[new Date(this.currentDate).getDate() % this.hadithCollection.length]; },
 
-                // Initialization
                 init() {
-                    // Hilangkan manual loader setelah Alpine siap
-                    setTimeout(() => {
-                        const loader = document.getElementById('initial-loader');
-                        if(loader) loader.style.display = 'none';
-                    }, 1000);
-
                     this.initChart();
-                    if(this.currentUser) {
-                        this.fetchData();
-                    }
+                    // Hilangkan Loading Screen jika sudah siap
+                    setTimeout(() => { document.getElementById('initial-loader').style.display = 'none'; }, 1000);
+                    if(this.currentUser) this.fetchData();
                 },
 
-                // Auth Functions
                 login() {
-                    if (!this.loginForm.role) return alert("Pilih peran dulu");
-                    if (this.loginForm.pin !== "1234") return alert("PIN Salah!");
-                    
+                    if (!this.loginForm.role) return alert("Pilih peran");
+                    if (this.loginForm.pin !== "1234") return alert("PIN Salah");
                     this.currentUser = this.loginForm.role;
                     localStorage.setItem('ay_user', this.loginForm.role);
                     this.fetchData();
                 },
-                logout() {
-                    localStorage.removeItem('ay_user');
-                    location.reload();
-                },
-
-                // Logic Functions
-                changeDate(offset) {
-                    const d = new Date(this.currentDate);
-                    d.setDate(d.getDate() + offset);
+                logout() { localStorage.removeItem('ay_user'); location.reload(); },
+                changeDate(off) {
+                    const d = new Date(this.currentDate); d.setDate(d.getDate() + off);
                     this.currentDate = d.toISOString().split('T')[0];
                     this.fetchData();
                 },
-                isChecked(id) {
-                    return this.myData.includes(id);
-                },
+                isChecked(id) { return this.myData.includes(id); },
 
-                // Database Interactions (Direct Call inside Module Scope)
                 fetchData() {
                     if (!db || !this.currentUser) return;
-                    
-                    const docRef = doc(db, "daily_logs", this.currentDate);
-                    
-                    // Realtime Listener
-                    onSnapshot(docRef, (docSnap) => {
+                    // Menggunakan fungsi Firestore yang diimport di atas
+                    onSnapshot(doc(db, "daily_logs", this.currentDate), (docSnap) => {
                         const data = docSnap.exists() ? docSnap.data() : {};
-                        
                         this.myData = data[this.currentUser] || [];
-                        
-                        // Cek data pasangan
-                        const partner = this.currentUser === 'suami' ? 'istri' : 'suami';
-                        this.partnerData = data[partner] || [];
-                        
+                        this.partnerData = data[this.currentUser === 'suami' ? 'istri' : 'suami'] || [];
                         this.updateChart(this.myScore, this.partnerScore);
                     });
                 },
 
                 async toggleAmalan(id) {
-                    if (!db) return alert("Database belum siap/offline");
+                    if (!db) return;
+                    if (this.myData.includes(id)) { this.myData = this.myData.filter(x => x !== id); } 
+                    else { this.myData.push(id); }
                     
-                    // Optimistic UI Update (Langsung centang biar smooth)
-                    if (this.myData.includes(id)) {
-                        this.myData = this.myData.filter(x => x !== id);
-                    } else {
-                        this.myData.push(id);
-                    }
-
-                    // Save to DB
                     const docRef = doc(db, "daily_logs", this.currentDate);
-                    try {
-                        // Baca dulu agar tidak menimpa data pasangan
-                        const docSnap = await getDoc(docRef);
-                        let currentData = docSnap.exists() ? docSnap.data() : {};
-                        
-                        currentData[this.currentUser] = this.myData;
-                        
-                        await setDoc(docRef, currentData, { merge: true });
-                    } catch (e) {
-                        console.error("Gagal simpan", e);
-                        // Revert visual jika gagal (opsional)
-                    }
+                    const docSnap = await getDoc(docRef);
+                    let currentData = docSnap.exists() ? docSnap.data() : {};
+                    currentData[this.currentUser] = this.myData;
+                    await setDoc(docRef, currentData, { merge: true });
                 },
 
-                // Chart Logic
                 initChart() {
                     const ctx = document.getElementById('mainChart');
                     if(!ctx) return;
-                    
                     Chart.defaults.color = '#94a3b8';
-                    Chart.defaults.font.family = 'Inter';
-
                     this.chart = new Chart(ctx, {
                         type: 'bar',
                         data: {
                             labels: ['Saya', 'Pasangan'],
-                            datasets: [{
-                                label: 'Progress (%)',
-                                data: [0, 0],
-                                backgroundColor: ['#10B981', '#3B82F6'],
-                                borderRadius: 6,
-                                barThickness: 40
-                            }]
+                            datasets: [{ label: 'Progress (%)', data: [0, 0], backgroundColor: ['#10B981', '#3B82F6'], borderRadius: 6 }]
                         },
                         options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
+                            responsive: true, maintainAspectRatio: false,
                             plugins: { legend: { display: false } },
-                            scales: {
-                                y: { beginAtZero: true, max: 100, grid: { color: '#334155' } },
-                                x: { grid: { display: false } }
-                            }
+                            scales: { y: { beginAtZero: true, max: 100, grid: { color: '#334155' } }, x: { grid: { display: false } } }
                         }
                     });
                 },
-                updateChart(myVal, partnerVal) {
-                    if(this.chart) {
-                        this.chart.data.datasets[0].data = [myVal, partnerVal];
-                        this.chart.update();
-                    }
-                }
+                updateChart(my, ptr) { if(this.chart) { this.chart.data.datasets[0].data = [my, ptr]; this.chart.update(); } }
             }));
         });
     </script>
