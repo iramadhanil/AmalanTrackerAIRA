@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yaumi Dashboard</title>
+    <title>Amalan Couple Tracker</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lateef&display=swap" rel="stylesheet">
@@ -30,6 +30,8 @@
     <style>
         [x-cloak] { display: none !important; }
         body { background-color: #0F172A; color: #E2E8F0; }
+        
+        /* Loader Animation */
         .loader-ring { display: inline-block; width: 64px; height: 64px; }
         .loader-ring:after { content: " "; display: block; width: 46px; height: 46px; margin: 8px; border-radius: 50%; border: 5px solid #fff; border-color: #10B981 transparent #10B981 transparent; animation: ring 1.2s linear infinite; }
         @keyframes ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -37,36 +39,33 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col relative bg-slate-900">
 
-    <div id="initial-loader" class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center transition-opacity duration-500">
+    <div id="app-loader" class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="loader-ring"></div>
-        <p class="mt-4 text-emerald-500 font-mono text-sm animate-pulse">Menghubungkan Database...</p>
-        <button onclick="document.getElementById('initial-loader').style.display='none'" class="mt-8 text-xs text-slate-500 underline hover:text-white" style="display:none" id="force-enter">
-            Masuk Paksa (Mode Offline)
+        <p id="loader-text" class="mt-4 text-emerald-500 font-mono text-sm animate-pulse">Menyiapkan Aplikasi...</p>
+        <button onclick="forceRemoveLoader()" id="force-btn" class="hidden mt-8 text-xs text-slate-500 underline hover:text-white">
+            Klik jika loading terlalu lama
         </button>
     </div>
 
-    <script>
-        // Tampilkan tombol darurat jika loading > 5 detik
-        setTimeout(() => { document.getElementById('force-enter').style.display = 'block'; }, 5000);
-    </script>
-
-    <div x-data="mainApp" x-cloak class="flex-1 flex flex-col h-screen overflow-hidden">
+    <div x-data="coupleApp" x-cloak class="flex-1 flex flex-col h-screen overflow-hidden">
 
         <div x-show="!currentUser" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 backdrop-blur-sm">
             <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl shadow-2xl w-full max-w-sm text-center">
                 <div class="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-kaaba text-xl"></i>
                 </div>
-                <h2 class="text-xl font-bold text-white mb-1">Yaumi Tracker</h2>
-                <p class="text-slate-400 text-sm mb-6">Baiti Jannati</p>
+                <h2 class="text-xl font-bold text-white mb-1">Ahlan wa Sahlan</h2>
+                <p class="text-slate-400 text-sm mb-6">Masuk untuk mencatat amalan</p>
                 <div class="space-y-3">
                     <select x-model="loginForm.role" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:border-emerald-500 focus:outline-none transition text-white">
-                        <option value="" disabled selected>Pilih Pengguna</option>
+                        <option value="" disabled selected>Pilih Peran</option>
                         <option value="suami">Suami</option>
                         <option value="istri">Istri</option>
                     </select>
                     <input type="password" x-model="loginForm.pin" placeholder="PIN (1234)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-center tracking-widest focus:border-emerald-500 focus:outline-none transition text-white">
-                    <button @click="login()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-3 rounded-lg transition shadow-lg shadow-emerald-900/20">Masuk</button>
+                    <button @click="login()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-3 rounded-lg transition shadow-lg shadow-emerald-900/20">
+                        Buka Catatan
+                    </button>
                 </div>
             </div>
         </div>
@@ -81,7 +80,7 @@
                     <div class="flex items-center space-x-3 p-3 bg-slate-700/50 rounded-lg mb-6 border border-slate-600">
                         <div class="w-10 h-10 rounded-full bg-slate-600 flex items-center justify-center text-slate-300"><i class="fas fa-user"></i></div>
                         <div>
-                            <p class="text-xs text-slate-400 uppercase font-semibold">Login Sebagai</p>
+                            <p class="text-xs text-slate-400 uppercase font-semibold">User</p>
                             <p class="text-sm font-medium text-white capitalize" x-text="currentUser"></p>
                         </div>
                     </div>
@@ -102,6 +101,11 @@
 
             <main class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-900">
                 <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6">
+                    
+                    <div x-show="!dbReady" class="md:col-span-12 bg-yellow-900/30 border border-yellow-700 text-yellow-500 p-2 rounded text-xs text-center animate-pulse">
+                        <i class="fas fa-wifi mr-2"></i> Mencoba menghubungkan ke database... (Mode Offline Aktif)
+                    </div>
+
                     <div class="md:col-span-5 lg:col-span-4 space-y-6">
                         <div class="flex items-center justify-between">
                             <h2 class="text-xl font-bold text-white">Amalan Harian</h2>
@@ -124,14 +128,15 @@
                             </template>
                         </div>
                     </div>
+
                     <div class="md:col-span-7 lg:col-span-8 space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 relative overflow-hidden">
-                                <p class="text-slate-400 text-xs font-semibold uppercase mb-1">Peforma Gabungan</p>
+                            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                                <p class="text-slate-400 text-xs font-semibold uppercase mb-1">Capaian Kita</p>
                                 <h3 class="text-3xl font-bold text-white" x-text="jointScore + '%'"></h3>
                                 <div class="mt-4 flex gap-1 h-1.5 w-full bg-slate-700 rounded-full overflow-hidden">
-                                    <div class="bg-emerald-500" :style="`width: ${myScore}%`"></div>
-                                    <div class="bg-blue-500" :style="`width: ${partnerScore}%`"></div>
+                                    <div class="bg-emerald-500" :style="`width: ${myScore}%`" title="Saya"></div>
+                                    <div class="bg-blue-500" :style="`width: ${partnerScore}%`" title="Pasangan"></div>
                                 </div>
                             </div>
                             <div class="md:col-span-2 bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700 flex flex-col justify-center relative">
@@ -141,7 +146,7 @@
                             </div>
                         </div>
                         <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                             <div class="h-64 w-full"><canvas id="mainChart"></canvas></div>
+                            <div class="h-64 w-full"><canvas id="mainChart"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -150,12 +155,10 @@
     </div>
 
     <script type="module">
-        // 1. IMPORT FIREBASE DARI CDN (BUKAN BARE IMPORT)
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // 2. CONFIG FIREBASE ANDA
+        // Konfigurasi
         const firebaseConfig = {
             apiKey: "AIzaSyDtuBXr5lOOzoPQeCX2nIRVtWkQ0jW3o1Q",
             authDomain: "amalan-couple.firebaseapp.com",
@@ -166,25 +169,40 @@
             measurementId: "G-LREQGQHSWS"
         };
 
-        // 3. INIT FIREBASE
-        let db;
         try {
             const app = initializeApp(firebaseConfig);
-            const analytics = getAnalytics(app); // Analytics dimuat
-            db = getFirestore(app); // DATABASE WAJIB DIMUAT
-            console.log("Firebase Connected Successfully");
+            const db = getFirestore(app);
+            
+            // EXPOSE KE GLOBAL WINDOW AGAR BISA DIAKSES ALPINE
+            window.db = db;
+            window.fb = { doc, onSnapshot, getDoc, setDoc };
+            console.log("Firebase Connected & Bridged");
         } catch(e) {
-            console.error("Firebase Error:", e);
+            console.error("Firebase Connection Error:", e);
+        }
+    </script>
+
+    <script>
+        // Failsafe: Jika dalam 4 detik loader masih ada, paksa hilang
+        setTimeout(forceRemoveLoader, 4000);
+
+        function forceRemoveLoader() {
+            const loader = document.getElementById('app-loader');
+            if(loader) loader.style.display = 'none';
         }
 
-        // 4. ALPINE JS LOGIC
         document.addEventListener('alpine:init', () => {
-            Alpine.data('mainApp', () => ({
+            Alpine.data('coupleApp', () => ({
                 currentUser: localStorage.getItem('ay_user') || null,
                 currentDate: new Date().toISOString().split('T')[0],
                 loginForm: { role: '', pin: '' },
-                myData: [], partnerData: [],
                 
+                // Data
+                dbReady: false,
+                myData: [],
+                partnerData: [],
+                chart: null,
+
                 amalanList: [
                     { id: 1, text: "Ngaji 2 Halaman", icon: "fas fa-quran" },
                     { id: 2, text: "Baca Al Waqiah", icon: "fas fa-book-open" },
@@ -199,8 +217,8 @@
                     { text: "Sebaik-baik kalian adalah yang paling baik akhlaknya.", source: "HR. Bukhari" },
                     { text: "Amalan yang paling dicintai Allah adalah yang terus menerus (istiqomah).", source: "HR. Muslim" }
                 ],
-                chart: null,
 
+                // Computed
                 get progressPercent() { return Math.round((this.myData.length / this.amalanList.length) * 100); },
                 get myScore() { return this.progressPercent; },
                 get partnerScore() { return Math.round((this.partnerData.length / this.amalanList.length) * 100); },
@@ -210,9 +228,19 @@
 
                 init() {
                     this.initChart();
-                    // Hilangkan Loading Screen jika sudah siap
-                    setTimeout(() => { document.getElementById('initial-loader').style.display = 'none'; }, 1000);
-                    if(this.currentUser) this.fetchData();
+                    
+                    // Polling Koneksi Database (Cek setiap 500ms apakah bridge sudah siap)
+                    let checkDB = setInterval(() => {
+                        if(window.db && window.fb) {
+                            console.log("Database Detected by UI");
+                            this.dbReady = true;
+                            clearInterval(checkDB);
+                            if(this.currentUser) this.fetchData();
+                            
+                            // Database siap, hilangkan loader
+                            forceRemoveLoader();
+                        }
+                    }, 200);
                 },
 
                 login() {
@@ -222,18 +250,24 @@
                     localStorage.setItem('ay_user', this.loginForm.role);
                     this.fetchData();
                 },
+
                 logout() { localStorage.removeItem('ay_user'); location.reload(); },
+                
                 changeDate(off) {
                     const d = new Date(this.currentDate); d.setDate(d.getDate() + off);
                     this.currentDate = d.toISOString().split('T')[0];
                     this.fetchData();
                 },
+
                 isChecked(id) { return this.myData.includes(id); },
 
+                // === OPERASI DATABASE MENGGUNAKAN BRIDGE WINDOW.FB ===
                 fetchData() {
-                    if (!db || !this.currentUser) return;
-                    // Menggunakan fungsi Firestore yang diimport di atas
-                    onSnapshot(doc(db, "daily_logs", this.currentDate), (docSnap) => {
+                    if (!window.db) return; // Belum siap
+                    
+                    const { doc, onSnapshot } = window.fb;
+                    
+                    onSnapshot(doc(window.db, "daily_logs", this.currentDate), (docSnap) => {
                         const data = docSnap.exists() ? docSnap.data() : {};
                         this.myData = data[this.currentUser] || [];
                         this.partnerData = data[this.currentUser === 'suami' ? 'istri' : 'suami'] || [];
@@ -242,15 +276,23 @@
                 },
 
                 async toggleAmalan(id) {
-                    if (!db) return;
+                    // Optimistic Update (Ubah UI duluan biar cepat)
                     if (this.myData.includes(id)) { this.myData = this.myData.filter(x => x !== id); } 
                     else { this.myData.push(id); }
+
+                    if (!window.db) return; // Jika offline, cuma update UI
+
+                    const { doc, getDoc, setDoc } = window.fb;
+                    const docRef = doc(window.db, "daily_logs", this.currentDate);
                     
-                    const docRef = doc(db, "daily_logs", this.currentDate);
-                    const docSnap = await getDoc(docRef);
-                    let currentData = docSnap.exists() ? docSnap.data() : {};
-                    currentData[this.currentUser] = this.myData;
-                    await setDoc(docRef, currentData, { merge: true });
+                    try {
+                        const docSnap = await getDoc(docRef);
+                        let currentData = docSnap.exists() ? docSnap.data() : {};
+                        currentData[this.currentUser] = this.myData;
+                        await setDoc(docRef, currentData, { merge: true });
+                    } catch(e) {
+                        console.error("Gagal simpan", e);
+                    }
                 },
 
                 initChart() {
@@ -270,6 +312,7 @@
                         }
                     });
                 },
+                
                 updateChart(my, ptr) { if(this.chart) { this.chart.data.datasets[0].data = [my, ptr]; this.chart.update(); } }
             }));
         });
