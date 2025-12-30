@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sakinah Tracker Premium</title>
+    <title>Sakinah Tracker Pro</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,27 +17,25 @@
         tailwind.config = {
             theme: {
                 fontFamily: {
-                    sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    serif: ['"Playfair Display"', 'serif'], // Font Estetik Baru
-                    arabic: ['"Amiri"', 'serif'],
+                    sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    arabic: ['Amiri', 'serif'],
                 },
                 extend: {
                     colors: {
-                        // Background Creamy (Hangat, tidak silau)
-                        cream: { 50: '#FDFBF7', 100: '#F7F5F0', 200: '#EBE9E4' },
-                        
-                        // Primary: Muted Sage (Ichwan)
-                        sage: { 400: '#94A89A', 500: '#6B8E7B', 600: '#527060', 700: '#3D5248' },
-                        
-                        // Secondary: Dusty Clay (Aiko)
-                        clay: { 400: '#D6A69C', 500: '#C28377', 600: '#A6655A' },
-                        
-                        // Text Colors
-                        ink: { 900: '#2D2A26', 600: '#5C5852', 400: '#94908B' }
+                        // Apple System Colors
+                        ios: {
+                            bg: '#F5F5F7',       // Light Gray Background
+                            card: '#FFFFFF',     // Pure White Cards
+                            text: '#1D1D1F',     // Almost Black
+                            subtext: '#86868B',  // Gray Text
+                            blue: '#0071E3',     // Apple Blue
+                            blue_hover: '#0077ED',
+                            border: '#D2D2D7'    // Subtle Border
+                        }
                     },
                     boxShadow: {
-                        'soft': '0 10px 40px -10px rgba(0,0,0,0.05)',
-                        'float': '0 20px 40px -15px rgba(107, 142, 123, 0.15)'
+                        'ios': '0 4px 12px rgba(0, 0, 0, 0.04)', // Very subtle shadow
+                        'ios-hover': '0 6px 16px rgba(0, 0, 0, 0.08)'
                     }
                 }
             }
@@ -45,167 +43,158 @@
     </script>
     <style>
         [x-cloak] { display: none !important; }
-        body { background-color: #FDFBF7; color: #2D2A26; }
-        .font-arabic { font-family: 'Amiri', serif; line-height: 2.4; direction: rtl; }
+        body { background-color: #F5F5F7; color: #1D1D1F; -webkit-font-smoothing: antialiased; }
+        .font-arabic { font-family: 'Amiri', serif; line-height: 2.2; direction: rtl; }
         
-        /* Smooth UI Elements */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #D1CEC7; border-radius: 20px; }
-        ::-webkit-scrollbar-thumb:hover { background: #6B8E7B; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
         
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .hover-lift {
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-        }
-        .hover-lift:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.1);
+        /* Smooth Checkbox Transition */
+        .check-transition { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* Glass Effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col relative selection:bg-sage-200 selection:text-sage-700">
+<body class="antialiased min-h-screen flex flex-col relative selection:bg-ios-blue selection:text-white">
 
-    <div id="app-loader" class="fixed inset-0 z-[100] bg-[#FDFBF7] flex flex-col items-center justify-center transition-opacity duration-700">
-        <div class="relative">
-            <div class="w-16 h-16 border-4 border-sage-100 border-t-sage-500 rounded-full animate-spin"></div>
-            <div class="absolute inset-0 flex items-center justify-center text-sage-600 text-xs font-serif font-bold">S</div>
-        </div>
-        <p class="mt-6 text-ink-400 font-serif italic text-sm animate-pulse">Menyiapkan Ruang Hati...</p>
+    <div id="app-loader" class="fixed inset-0 z-[100] bg-[#F5F5F7] flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="w-8 h-8 border-2 border-ios-subtext border-t-ios-blue rounded-full animate-spin"></div>
     </div>
 
     <div x-data="coupleApp" x-cloak class="flex-1 flex flex-col h-screen overflow-hidden">
 
-        <div x-show="!currentSession.role" class="fixed inset-0 z-50 flex items-center justify-center bg-[#2D2A26]/20 backdrop-blur-sm transition-all duration-500">
-            <div class="bg-white/90 border border-white p-10 rounded-[2rem] shadow-2xl w-full max-w-sm text-center relative overflow-hidden group">
+        <div x-show="!currentSession.role" class="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm transition-opacity duration-300">
+            <div class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-sm text-center transform transition-all">
                 
-                <div class="absolute top-0 right-0 w-32 h-32 bg-sage-50 rounded-bl-[4rem] -z-10 transition-transform duration-700 group-hover:scale-110"></div>
-                
-                <div class="relative z-10">
-                    <h2 class="text-4xl font-bold text-ink-900 mb-2 font-serif tracking-tight">Sakinah.</h2>
-                    <p class="text-ink-600 text-sm mb-10 font-sans tracking-wide">Masuk untuk melanjutkan ibadah</p>
-                    
-                    <div class="space-y-5 text-left">
-                        <div>
-                            <label class="text-[10px] font-bold text-ink-400 uppercase tracking-widest ml-1 mb-1 block">Username</label>
-                            <input type="text" x-model="loginForm.username" placeholder="Ichwan / Aiko" class="w-full bg-cream-50 border border-cream-200 rounded-xl px-5 py-4 text-sm focus:border-sage-500 focus:ring-0 focus:bg-white transition text-ink-900 font-medium placeholder-ink-400/50">
-                        </div>
-
-                        <div>
-                            <label class="text-[10px] font-bold text-ink-400 uppercase tracking-widest ml-1 mb-1 block">PIN</label>
-                            <input type="password" x-model="loginForm.pin" placeholder="••••••••" class="w-full bg-cream-50 border border-cream-200 rounded-xl px-5 py-4 text-sm text-center tracking-[0.5em] focus:border-sage-500 focus:ring-0 focus:bg-white transition text-ink-900 font-bold">
-                        </div>
-                        
-                        <button @click="login()" class="w-full bg-ink-900 hover:bg-sage-600 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-sage-500/30 active:scale-95 mt-4">
-                            Buka Catatan
-                        </button>
+                <div class="mb-8">
+                    <div class="w-12 h-12 bg-ios-bg text-ios-text rounded-xl flex items-center justify-center mx-auto mb-4 text-xl shadow-sm">
+                        <i class="fas fa-layer-group"></i>
                     </div>
+                    <h2 class="text-2xl font-bold tracking-tight text-ios-text">Welcome Back</h2>
+                    <p class="text-ios-subtext text-sm mt-1">Sakinah Tracker Professional</p>
+                </div>
+                
+                <div class="space-y-4 text-left">
+                    <div>
+                        <label class="text-xs font-semibold text-ios-subtext uppercase tracking-wide ml-1">Username</label>
+                        <input type="text" x-model="loginForm.username" placeholder="Masukkan Username" class="w-full mt-1 bg-ios-bg border border-transparent focus:bg-white focus:border-ios-blue focus:ring-0 rounded-lg px-4 py-3 text-sm transition-all font-medium">
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-semibold text-ios-subtext uppercase tracking-wide ml-1">PIN</label>
+                        <input type="password" x-model="loginForm.pin" placeholder="••••••••" class="w-full mt-1 bg-ios-bg border border-transparent focus:bg-white focus:border-ios-blue focus:ring-0 rounded-lg px-4 py-3 text-sm text-center tracking-[0.3em] transition-all font-medium">
+                    </div>
+                    
+                    <button @click="login()" class="w-full bg-ios-blue hover:bg-ios-blue_hover text-white font-medium py-3.5 rounded-lg transition-colors shadow-lg shadow-blue-500/20 mt-2 text-sm">
+                        Sign In
+                    </button>
                 </div>
             </div>
         </div>
 
         <div x-show="currentSession.role" class="flex-1 flex flex-col md:flex-row overflow-hidden">
             
-            <aside class="hidden md:flex w-72 bg-white/80 backdrop-blur-md border-r border-cream-200 flex-col justify-between z-20 shrink-0 shadow-soft">
-                <div class="p-8">
-                    <div class="flex items-center space-x-3 mb-12">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sage-500 to-sage-700 flex items-center justify-center text-white font-serif font-bold text-xl shadow-lg shadow-sage-500/20">S</div>
-                        <span class="font-bold text-2xl tracking-tighter text-ink-900 font-serif">Sakinah<span class="text-sage-500">.io</span></span>
+            <aside class="hidden md:flex w-64 bg-white border-r border-gray-200 flex-col justify-between z-20 shrink-0">
+                <div class="p-6">
+                    <div class="flex items-center space-x-3 mb-10">
+                        <div class="w-8 h-8 rounded-lg bg-ios-blue flex items-center justify-center text-white text-sm font-bold shadow-md">S</div>
+                        <span class="font-bold text-lg tracking-tight text-ios-text">Sakinah<span class="text-ios-blue">.Pro</span></span>
                     </div>
 
-                    <div class="mb-10 p-4 rounded-2xl bg-cream-50 border border-cream-100 flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-white border border-cream-200 flex items-center justify-center text-sage-600 shadow-sm">
-                            <i class="fas fa-user"></i>
+                    <div class="mb-8 flex items-center space-x-3 p-3 bg-ios-bg rounded-xl">
+                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-ios-subtext border border-gray-200 shadow-sm">
+                            <i class="fas fa-user text-sm"></i>
                         </div>
                         <div>
-                            <p class="text-[10px] text-ink-400 uppercase font-bold tracking-wider">Ahlan,</p>
-                            <h3 class="text-sm font-bold text-ink-900 capitalize" x-text="currentSession.name"></h3>
+                            <p class="text-[10px] text-ios-subtext uppercase font-bold">Logged in as</p>
+                            <h3 class="text-sm font-bold text-ios-text capitalize" x-text="currentSession.name"></h3>
                         </div>
                     </div>
 
-                    <div class="space-y-3">
-                        <label class="text-xs text-ink-400 font-bold uppercase tracking-wider ml-1">Tanggal</label>
-                        <div class="flex items-center bg-white rounded-xl border border-cream-200 p-1.5 shadow-sm">
-                            <button @click="changeDate(-1)" class="w-10 h-10 flex items-center justify-center text-ink-400 hover:text-sage-600 hover:bg-cream-50 rounded-lg transition"><i class="fas fa-chevron-left"></i></button>
-                            <input type="date" x-model="currentDate" @change="fetchData()" class="bg-transparent border-none text-sm text-center w-full focus:outline-none text-ink-900 font-mono font-bold cursor-pointer">
-                            <button @click="changeDate(1)" class="w-10 h-10 flex items-center justify-center text-ink-400 hover:text-sage-600 hover:bg-cream-50 rounded-lg transition"><i class="fas fa-chevron-right"></i></button>
+                    <nav class="space-y-1">
+                        <a href="#" class="flex items-center space-x-3 px-3 py-2 bg-ios-bg text-ios-blue rounded-lg text-sm font-semibold">
+                            <i class="fas fa-chart-pie w-5"></i> <span>Dashboard</span>
+                        </a>
+                    </nav>
+
+                    <div class="mt-8">
+                        <label class="text-xs font-bold text-ios-subtext uppercase tracking-wide ml-1 mb-2 block">Date</label>
+                        <div class="flex items-center bg-ios-bg rounded-lg p-1 border border-gray-200">
+                            <button @click="changeDate(-1)" class="w-8 h-8 flex items-center justify-center text-ios-subtext hover:text-ios-text hover:bg-white rounded-md transition shadow-sm"><i class="fas fa-chevron-left text-xs"></i></button>
+                            <input type="date" x-model="currentDate" @change="fetchData()" class="bg-transparent border-none text-xs text-center flex-1 focus:outline-none font-semibold text-ios-text cursor-pointer">
+                            <button @click="changeDate(1)" class="w-8 h-8 flex items-center justify-center text-ios-subtext hover:text-ios-text hover:bg-white rounded-md transition shadow-sm"><i class="fas fa-chevron-right text-xs"></i></button>
                         </div>
-                        <p class="text-xs text-center text-sage-600 font-medium font-serif italic" x-text="formattedDate"></p>
+                        <p class="text-[10px] text-center text-ios-subtext mt-2 font-medium" x-text="formattedDate"></p>
                     </div>
                 </div>
-                
-                <div class="p-6 border-t border-cream-200">
-                    <button @click="logout()" class="flex items-center justify-center text-ink-400 hover:text-red-500 hover:bg-red-50 transition text-sm space-x-2 w-full p-4 rounded-xl font-bold tracking-wide">
-                        <i class="fas fa-sign-out-alt"></i> <span>Keluar</span>
+
+                <div class="p-4 border-t border-gray-100">
+                    <button @click="logout()" class="flex items-center text-ios-subtext hover:text-red-600 transition text-sm font-medium px-3 py-2 w-full rounded-lg hover:bg-red-50">
+                        <i class="fas fa-sign-out-alt w-5"></i> <span>Log Out</span>
                     </button>
                 </div>
             </aside>
 
-            <main class="flex-1 overflow-y-auto bg-[#FDFBF7] scroll-smooth">
+            <main class="flex-1 overflow-y-auto bg-[#F5F5F7] scroll-smooth">
                 
-                <div class="md:hidden bg-white/90 backdrop-blur-md border-b border-cream-200 sticky top-0 z-30 px-5 py-4 shadow-sm">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="font-bold text-xl text-ink-900 font-serif">Sakinah<span class="text-sage-500">.io</span></span>
-                        <button @click="logout()" class="w-9 h-9 rounded-full bg-cream-50 text-ink-400 border border-cream-200 flex items-center justify-center">
-                            <i class="fas fa-sign-out-alt text-xs"></i>
-                        </button>
+                <div class="md:hidden glass sticky top-0 z-30 px-4 py-3 flex flex-col">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="font-bold text-lg tracking-tight">Sakinah<span class="text-ios-blue">.Pro</span></span>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-xs font-semibold text-ios-subtext capitalize" x-text="currentSession.name"></span>
+                            <button @click="logout()" class="w-8 h-8 rounded-full bg-gray-100 text-ios-subtext flex items-center justify-center">
+                                <i class="fas fa-sign-out-alt text-xs"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex items-center justify-between bg-cream-50 rounded-xl p-1 border border-cream-100">
-                         <button @click="changeDate(-1)" class="w-10 h-10 text-ink-400"><i class="fas fa-chevron-left"></i></button>
+                    <div class="flex items-center justify-between bg-gray-100 rounded-lg p-1">
+                         <button @click="changeDate(-1)" class="w-8 h-8 text-ios-subtext"><i class="fas fa-chevron-left text-xs"></i></button>
                          <div class="text-center">
-                             <input type="date" x-model="currentDate" @change="fetchData()" class="bg-transparent border-none text-xs text-center w-28 text-ink-900 font-bold p-0 focus:outline-none">
-                             <p class="text-[10px] text-sage-600 font-serif" x-text="formattedDate"></p>
+                             <input type="date" x-model="currentDate" @change="fetchData()" class="bg-transparent border-none text-xs text-center w-24 font-bold focus:outline-none p-0">
+                             <p class="text-[10px] text-ios-subtext" x-text="formattedDate"></p>
                          </div>
-                         <button @click="changeDate(1)" class="w-10 h-10 text-ink-400"><i class="fas fa-chevron-right"></i></button>
+                         <button @click="changeDate(1)" class="w-8 h-8 text-ios-subtext"><i class="fas fa-chevron-right text-xs"></i></button>
                     </div>
                 </div>
 
-                <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 p-5 md:p-10 pb-32">
+                <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 p-4 md:p-8 pb-32">
                     
-                    <div x-show="!dbReady" class="md:col-span-12 bg-orange-50 border border-orange-100 text-orange-600 p-4 rounded-2xl text-xs text-center font-medium shadow-sm">
-                        <i class="fas fa-wifi mr-2 animate-pulse"></i> Mode Offline: Menunggu sinkronisasi data...
+                    <div x-show="!dbReady" class="md:col-span-12 bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-xl text-xs font-medium text-center shadow-sm">
+                        <i class="fas fa-wifi mr-2"></i> Connecting to database...
                     </div>
 
-                    <div class="md:col-span-5 lg:col-span-4 space-y-6">
-                        <div class="flex items-end justify-between px-2">
-                            <h2 class="text-2xl font-bold text-ink-900 font-serif">Amalan Harian</h2>
-                            <span class="text-xs bg-sage-100 text-sage-700 px-3 py-1 rounded-full font-bold tracking-wide" x-text="progressPercent + '% Selesai'"></span>
+                    <div class="md:col-span-5 lg:col-span-4 space-y-5">
+                        <div class="flex items-end justify-between px-1">
+                            <h2 class="text-xl font-bold text-ios-text tracking-tight">Daily Tasks</h2>
+                            <span class="text-xs font-semibold text-ios-blue bg-blue-50 px-2 py-1 rounded-md" x-text="progressPercent + '% Completed'"></span>
                         </div>
 
-                        <div class="w-full bg-cream-200 rounded-full h-1.5 overflow-hidden">
-                            <div class="bg-sage-600 h-full rounded-full transition-all duration-1000 ease-out" :style="`width: ${progressPercent}%`"></div>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-ios-blue h-full rounded-full transition-all duration-500 ease-out" :style="`width: ${progressPercent}%`"></div>
                         </div>
 
-                        <div class="space-y-4">
+                        <div class="space-y-3">
                             <template x-for="item in amalanList" :key="item.id">
                                 <div 
                                     @click="toggleAmalan(item.id)"
-                                    class="group hover-lift flex items-center justify-between p-5 rounded-2xl border cursor-pointer transition-all duration-300 select-none bg-white relative overflow-hidden"
-                                    :class="isChecked(item.id) ? 'border-sage-200 shadow-soft' : 'border-transparent shadow-sm hover:border-cream-200'"
+                                    class="group flex items-center justify-between p-4 rounded-xl border bg-white cursor-pointer select-none transition-all duration-200"
+                                    :class="isChecked(item.id) ? 'border-ios-blue shadow-ios-hover' : 'border-transparent shadow-ios hover:border-gray-300'"
                                 >
-                                    <div class="absolute left-0 top-0 bottom-0 w-1.5 transition-colors duration-300"
-                                         :class="isChecked(item.id) ? 'bg-sage-500' : 'bg-transparent'"></div>
-
-                                    <div class="flex items-center space-x-5 pl-2">
-                                        <div class="w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-300"
-                                             :class="isChecked(item.id) ? 'bg-sage-500 border-sage-500 scale-105' : 'border-cream-300 bg-cream-50 group-hover:border-sage-300'">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-5 h-5 rounded-full border flex items-center justify-center check-transition"
+                                             :class="isChecked(item.id) ? 'bg-ios-blue border-ios-blue' : 'bg-gray-50 border-gray-300 group-hover:border-ios-blue'">
                                             <i class="fas fa-check text-white text-[10px]" x-show="isChecked(item.id)"></i>
                                         </div>
-                                        
-                                        <div class="flex flex-col">
-                                            <span class="text-sm font-medium transition-colors duration-300" 
-                                                  :class="isChecked(item.id) ? 'text-ink-900 font-bold' : 'text-ink-600'" 
-                                                  x-text="item.text"></span>
-                                        </div>
+                                        <span class="text-sm font-medium transition-colors" 
+                                              :class="isChecked(item.id) ? 'text-ios-text font-semibold' : 'text-ios-subtext group-hover:text-ios-text'" 
+                                              x-text="item.text"></span>
                                     </div>
-                                    
-                                    <i :class="item.icon" class="text-xl transition duration-300"
-                                       :class="isChecked(item.id) ? 'text-sage-400' : 'text-cream-300 group-hover:text-sage-300'"></i>
                                 </div>
                             </template>
                         </div>
@@ -214,57 +203,53 @@
                     <div class="md:col-span-7 lg:col-span-8 space-y-6">
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-white p-6 rounded-3xl border border-white shadow-float relative overflow-hidden group hover-lift">
-                                <div class="absolute top-0 right-0 p-6 opacity-5 transition-opacity group-hover:opacity-10"><i class="fas fa-heart text-6xl text-sage-900"></i></div>
-                                
-                                <p class="text-ink-400 text-xs font-bold uppercase tracking-widest mb-2">Sinergi Hati</p>
-                                <div class="flex items-baseline space-x-2 mb-8">
-                                    <h3 class="text-6xl font-serif font-bold text-ink-900 tracking-tight" x-text="jointScore">0</h3>
-                                    <span class="text-2xl text-sage-500 font-serif">%</span>
+                            <div class="bg-white p-6 rounded-2xl shadow-ios border border-transparent">
+                                <p class="text-ios-subtext text-xs font-bold uppercase tracking-wide mb-1">Total Synergy</p>
+                                <div class="flex items-baseline space-x-1 mb-6">
+                                    <h3 class="text-4xl font-bold text-ios-text tracking-tight" x-text="jointScore">0</h3>
+                                    <span class="text-lg text-ios-subtext font-medium">%</span>
                                 </div>
-                                
                                 <div class="space-y-4">
                                     <div>
-                                        <div class="flex justify-between text-xs font-bold text-ink-500 mb-1.5">
+                                        <div class="flex justify-between text-xs font-medium text-ios-subtext mb-1">
                                             <span>Ichwan</span>
-                                            <span class="text-sage-600" x-text="dataIchwan.length > 0 ? Math.round((dataIchwan.length/7)*100) + '%' : '0%'"></span>
+                                            <span class="text-ios-text font-bold" x-text="dataIchwan.length > 0 ? Math.round((dataIchwan.length/7)*100) + '%' : '0%'"></span>
                                         </div>
-                                        <div class="w-full bg-cream-100 rounded-full h-2 overflow-hidden">
-                                            <div class="bg-sage-500 h-full rounded-full transition-all duration-1000" :style="`width: ${dataIchwan.length > 0 ? Math.round((dataIchwan.length/7)*100) : 0}%`"></div>
+                                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                            <div class="bg-ios-text h-full rounded-full transition-all duration-700" :style="`width: ${dataIchwan.length > 0 ? Math.round((dataIchwan.length/7)*100) : 0}%`"></div>
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="flex justify-between text-xs font-bold text-ink-500 mb-1.5">
+                                        <div class="flex justify-between text-xs font-medium text-ios-subtext mb-1">
                                             <span>Aiko</span>
-                                            <span class="text-clay-500" x-text="dataAiko.length > 0 ? Math.round((dataAiko.length/7)*100) + '%' : '0%'"></span>
+                                            <span class="text-ios-blue font-bold" x-text="dataAiko.length > 0 ? Math.round((dataAiko.length/7)*100) + '%' : '0%'"></span>
                                         </div>
-                                        <div class="w-full bg-cream-100 rounded-full h-2 overflow-hidden">
-                                            <div class="bg-clay-500 h-full rounded-full transition-all duration-1000" :style="`width: ${dataAiko.length > 0 ? Math.round((dataAiko.length/7)*100) : 0}%`"></div>
+                                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                            <div class="bg-ios-blue h-full rounded-full transition-all duration-700" :style="`width: ${dataAiko.length > 0 ? Math.round((dataAiko.length/7)*100) : 0}%`"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="bg-gradient-to-br from-sage-50 to-white p-6 rounded-3xl border border-white shadow-soft flex flex-col justify-center relative hover-lift">
-                                <span class="inline-block px-3 py-1 bg-white text-sage-600 text-[10px] font-bold uppercase rounded-full mb-6 w-max border border-sage-100 shadow-sm">Mutiara Hadits</span>
-                                <p class="font-arabic text-2xl md:text-3xl text-ink-900 text-right mb-4 leading-loose drop-shadow-sm" x-text="todayHadith.arab"></p>
-                                <p class="font-sans text-sm text-ink-500 italic leading-relaxed" x-text="`&quot;` + todayHadith.text + `&quot;`"></p>
-                                <p class="text-xs text-sage-600 mt-6 font-bold uppercase tracking-wide flex items-center">
-                                    <span class="w-1 h-1 rounded-full bg-sage-500 mr-2"></span>
-                                    <span x-text="todayHadith.source"></span>
-                                </p>
+                            <div class="bg-white p-6 rounded-2xl shadow-ios border border-transparent flex flex-col justify-center relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-20 h-20 bg-blue-50 rounded-bl-full opacity-50"></div>
+                                <span class="text-ios-blue text-[10px] font-bold uppercase tracking-wide mb-4">Daily Wisdom</span>
+                                <p class="font-arabic text-2xl text-ios-text text-right mb-4 leading-relaxed" x-text="todayHadith.arab"></p>
+                                <p class="font-sans text-xs text-ios-subtext italic leading-relaxed" x-text="`&quot;` + todayHadith.text + `&quot;`"></p>
+                                <p class="text-[10px] text-ios-text mt-4 font-bold uppercase tracking-wide text-right" x-text="todayHadith.source"></p>
                             </div>
                         </div>
 
-                        <div class="bg-white p-6 rounded-3xl border border-white shadow-soft">
-                            <div class="flex justify-between items-center mb-8">
-                                <h3 class="font-bold text-ink-900 text-lg font-serif">Statistik Hari Ini</h3>
-                                <div class="flex space-x-6 text-xs font-bold">
-                                    <span class="flex items-center text-ink-500"><span class="w-2.5 h-2.5 rounded-full bg-sage-500 mr-2"></span>Ichwan</span>
-                                    <span class="flex items-center text-ink-500"><span class="w-2.5 h-2.5 rounded-full bg-clay-500 mr-2"></span>Aiko</span>
+                        <div class="bg-white p-6 rounded-2xl shadow-ios border border-transparent">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-bold text-ios-text text-base tracking-tight">Today's Performance</h3>
+                                <div class="flex space-x-4 text-xs font-semibold">
+                                    <span class="flex items-center text-ios-subtext"><span class="w-2 h-2 rounded-full bg-ios-text mr-2"></span>Ichwan</span>
+                                    <span class="flex items-center text-ios-subtext"><span class="w-2 h-2 rounded-full bg-ios-blue mr-2"></span>Aiko</span>
                                 </div>
                             </div>
-                            <div class="relative h-72 w-full">
+                            
+                            <div class="relative h-64 w-full">
                                 <canvas id="mainChart"></canvas>
                             </div>
                         </div>
@@ -299,7 +284,7 @@
     </script>
 
     <script>
-        setTimeout(() => { const l=document.getElementById('app-loader'); if(l)l.style.opacity='0'; setTimeout(()=>l.style.display='none',500) }, 3000);
+        setTimeout(() => { const l=document.getElementById('app-loader'); if(l)l.style.opacity='0'; setTimeout(()=>l.style.display='none',500) }, 2000);
 
         document.addEventListener('alpine:init', () => {
             Alpine.data('coupleApp', () => ({
@@ -313,19 +298,20 @@
                 dataAiko: [],
                 chart: null,
 
+                // --- USERS CONFIG (UPDATED) ---
                 users: {
                     "ichwan ramadhanil": { pin: "17122000", role: "suami", name: "Ichwan" },
                     "aikokita": { pin: "21062002", role: "istri", name: "Aiko" }
                 },
 
                 amalanList: [
-                    { id: 1, text: "Ngaji 2 Halaman", icon: "fas fa-quran" },
-                    { id: 2, text: "Baca Al Waqiah", icon: "fas fa-book-open" },
-                    { id: 3, text: "Qiyamul Lail", icon: "fas fa-moon" },
-                    { id: 4, text: "Sholat Dhuha", icon: "fas fa-sun" },
-                    { id: 5, text: "Al Matsurat Pagi", icon: "fas fa-cloud-sun" },
-                    { id: 6, text: "Al Matsurat Petang", icon: "fas fa-cloud-moon" },
-                    { id: 7, text: "Sedekah", icon: "fas fa-hand-holding-heart" }
+                    { id: 1, text: "Ngaji 2 Halaman" },
+                    { id: 2, text: "Baca Al Waqiah" },
+                    { id: 3, text: "Qiyamul Lail" },
+                    { id: 4, text: "Sholat Dhuha" },
+                    { id: 5, text: "Al Matsurat Pagi" },
+                    { id: 6, text: "Al Matsurat Petang" },
+                    { id: 7, text: "Sedekah" }
                 ],
                 
                 hadithCollection: [
@@ -340,7 +326,10 @@
                     const p2 = Math.round((this.dataAiko.length / 7) * 100);
                     return Math.round((p1 + p2) / 2); 
                 },
-                get formattedDate() { return new Date(this.currentDate).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); },
+                get formattedDate() { 
+                    const options = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
+                    return new Date(this.currentDate).toLocaleDateString('id-ID', options); 
+                },
                 get todayHadith() { const day = new Date(this.currentDate).getDate(); return this.hadithCollection[day % this.hadithCollection.length]; },
 
                 init() {
@@ -370,7 +359,7 @@
                 },
 
                 logout() {
-                    if(confirm("Keluar dari aplikasi?")) {
+                    if(confirm("Sign out?")) {
                         localStorage.removeItem('ay_session');
                         location.reload();
                     }
@@ -397,7 +386,6 @@
                         const pIchwan = Math.round((this.dataIchwan.length / 7) * 100);
                         const pAiko = Math.round((this.dataAiko.length / 7) * 100);
 
-                        // PENTING: Panggil renderChart setelah data didapatkan
                         this.renderChart(pIchwan, pAiko);
                     });
                 },
@@ -417,52 +405,61 @@
                     } catch(e) { console.error(e); }
                 },
 
-                // --- CHART RENDER FIX ---
+                // === ROBUST CHART RENDERING ===
                 renderChart(val1, val2) {
-                    // Gunakan setTimeout untuk memastikan elemen canvas sudah dirender oleh browser
+                    // Gunakan setTimeout untuk memastikan DOM render selesai sebelum Chart.js menggambar
                     setTimeout(() => {
                         const ctx = document.getElementById('mainChart');
-                        if(!ctx) {
-                            console.warn("Canvas not ready");
-                            return;
-                        }
+                        if(!ctx) return;
 
-                        // Hancurkan chart lama (PENTING untuk mencegah glitch)
+                        // Hancurkan chart lama sepenuhnya
                         if(this.chart) {
                             this.chart.destroy();
                         }
 
-                        Chart.defaults.font.family = '"Plus Jakarta Sans", sans-serif';
-                        Chart.defaults.color = '#94908B';
-
+                        Chart.defaults.font.family = 'Inter';
+                        
                         this.chart = new Chart(ctx, {
                             type: 'bar',
                             data: {
                                 labels: ['Ichwan', 'Aiko'],
                                 datasets: [{
                                     data: [val1, val2],
-                                    backgroundColor: ['#6B8E7B', '#C28377'], // Sage & Clay
-                                    borderRadius: 8,
-                                    barThickness: 50,
-                                    maxBarThickness: 60
+                                    // Ichwan = Hitam/Gelap, Aiko = Biru (Apple Style)
+                                    backgroundColor: ['#1D1D1F', '#0071E3'], 
+                                    borderRadius: 6,
+                                    barThickness: 60,
+                                    maxBarThickness: 80
                                 }]
                             },
                             options: {
                                 responsive: true,
-                                maintainAspectRatio: false, // Wajib false agar ikut container
-                                animation: { duration: 1000, easing: 'easeOutQuart' },
+                                maintainAspectRatio: false, // PENTING: Agar mengisi container parent
+                                animation: { duration: 600 },
                                 plugins: { legend: { display: false } },
                                 scales: {
                                     y: { 
                                         beginAtZero: true, max: 100, 
-                                        grid: { color: '#EBE9E4', borderDash: [6, 6] },
-                                        ticks: { callback: val => val + '%' }
+                                        grid: { color: '#F5F5F7', borderDash: [5, 5] },
+                                        ticks: { 
+                                            callback: val => val + '%',
+                                            font: { size: 10 },
+                                            color: '#86868B'
+                                        },
+                                        border: { display: false }
                                     },
-                                    x: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 12 }, color: '#5C5852' } }
+                                    x: { 
+                                        grid: { display: false }, 
+                                        ticks: { 
+                                            font: { weight: '600', size: 11 }, 
+                                            color: '#1D1D1F' 
+                                        },
+                                        border: { display: false }
+                                    }
                                 }
                             }
                         });
-                    }, 100); // Delay 100ms
+                    }, 50); // Delay mikro 50ms cukup
                 }
             }));
         });
