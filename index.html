@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sakinah Tracker - Precision</title>
+    <title>Sakinah Tracker - Liquid</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
@@ -11,6 +11,8 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/locale/id.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
 
     <script>
@@ -43,13 +45,26 @@
         body { background-color: #FAF9F6; color: #2D2A26; overflow-x: hidden; overflow-y: auto; -webkit-font-smoothing: antialiased; }
         .font-arabic { font-family: 'Amiri', serif; line-height: 2.4; direction: rtl; }
         
-        /* SMOOTH INTERACTIONS */
-        .hover-card { transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
-        .hover-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -5px rgba(45, 42, 38, 0.12); }
-        .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* === LIQUID PROGRESS BAR ANIMATION === */
+        .liquid-bar {
+            background-size: 200% 100%;
+            animation: flow 2s linear infinite;
+        }
+        .liquid-primary {
+            background-image: linear-gradient(90deg, #26A69A 0%, #4DB6AC 50%, #26A69A 100%);
+        }
+        .liquid-secondary {
+            background-image: linear-gradient(90deg, #F06292 0%, #F48FB1 50%, #F06292 100%);
+        }
+        .liquid-gold {
+            background-image: linear-gradient(90deg, #C5A059 0%, #E0C080 50%, #C5A059 100%);
+        }
+        @keyframes flow {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
 
-        /* LIQUID HEART */
+        /* === LIQUID HEART === */
         .heart-wrapper { width: 140px; height: 140px; position: relative; margin: 0 auto; }
         .heart-shape {
             width: 100%; height: 100%;
@@ -70,7 +85,14 @@
         }
         @keyframes wave-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* PARTICLES & LOADER */
+        /* === INTERACTIONS === */
+        .hover-card { transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .hover-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -5px rgba(45, 42, 38, 0.12); }
+        
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* PARTICLES */
         .particle { position: absolute; border-radius: 50%; background: rgba(197, 160, 89, 0.12); animation: float 12s infinite ease-in-out; pointer-events: none; }
         @keyframes float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-15px) scale(1.05); } }
     </style>
@@ -93,7 +115,7 @@
             <div class="bg-surface border border-white p-8 md:p-10 rounded-[2.5rem] shadow-2xl w-full max-w-sm text-center relative hover-card">
                 <div class="mb-8">
                     <h2 class="text-3xl font-bold text-ink-900 font-serif tracking-tight">Sakinah.</h2>
-                    <p class="text-ink-600 text-sm mt-2 font-sans tracking-wide">Aplikasi Ibadah Pasangan</p>
+                    <p class="text-ink-600 text-sm mt-2 font-sans tracking-wide">Login Pasangan</p>
                 </div>
                 <div class="space-y-5 text-left">
                     <div>
@@ -137,7 +159,7 @@
                 </div>
             </div>
             <div class="p-6 border-t border-ink-border">
-                <button @click="logout()" class="flex items-center justify-center text-ink-600 hover:text-secondary-600 transition text-sm space-x-2 w-full p-4 rounded-xl font-bold tracking-wide hover:bg-secondary-50">
+                <button @click="logout()" class="flex items-center justify-center text-ink-600 hover:text-secondary-600 transition text-sm space-x-2 w-full p-4 rounded-xl font-bold tracking-wide hover:bg-secondary-100/50">
                     <i class="fas fa-sign-out-alt"></i> <span>Keluar</span>
                 </button>
             </div>
@@ -175,8 +197,8 @@
                         <h2 class="text-2xl font-bold text-ink-900 font-serif">Amalan Harian</h2>
                     </div>
 
-                    <div class="w-full bg-ink-border rounded-full h-1.5 overflow-hidden shadow-inner">
-                        <div class="bg-gradient-to-r from-primary-500 to-secondary-500 h-full rounded-full transition-all duration-1000 ease-out" :style="`width: ${progressPercent}%`"></div>
+                    <div class="w-full bg-ink-border rounded-full h-2 overflow-hidden shadow-inner">
+                        <div class="liquid-bar liquid-gold h-full rounded-full transition-all duration-1000 ease-out" :style="`width: ${progressPercent}%`"></div>
                     </div>
 
                     <div class="space-y-3">
@@ -228,14 +250,15 @@
                                 <h2 class="text-6xl font-serif font-bold transition-colors duration-500 text-ink-900" x-text="jointScore">0</h2>
                                 <span class="text-2xl font-serif text-ink-400">%</span>
                             </div>
+                            
                             <div class="w-full space-y-3 px-2">
                                 <div>
                                     <div class="flex justify-between text-[10px] uppercase font-bold text-ink-400 mb-1">
                                         <span>Ichwan</span>
                                         <span class="text-primary-600" x-text="currentIchwanVal + '%'"></span>
                                     </div>
-                                    <div class="w-full bg-bg rounded-full h-1.5 overflow-hidden">
-                                        <div class="bg-primary-500 h-full rounded-full transition-all duration-1000 ease-out" :style="`width: ${currentIchwanVal}%`"></div>
+                                    <div class="w-full bg-bg rounded-full h-2 overflow-hidden">
+                                        <div class="liquid-bar liquid-primary h-full rounded-full transition-all duration-1000 ease-out" :style="`width: ${currentIchwanVal}%`"></div>
                                     </div>
                                 </div>
                                 <div>
@@ -243,8 +266,8 @@
                                         <span>Aiko</span>
                                         <span class="text-secondary-600" x-text="currentAikoVal + '%'"></span>
                                     </div>
-                                    <div class="w-full bg-bg rounded-full h-1.5 overflow-hidden">
-                                        <div class="bg-secondary-500 h-full rounded-full transition-all duration-1000 ease-out" :style="`width: ${currentAikoVal}%`"></div>
+                                    <div class="w-full bg-bg rounded-full h-2 overflow-hidden">
+                                        <div class="liquid-bar liquid-secondary h-full rounded-full transition-all duration-1000 ease-out" :style="`width: ${currentAikoVal}%`"></div>
                                     </div>
                                 </div>
                             </div>
@@ -301,7 +324,6 @@
         window.myChart = null;
         setTimeout(() => { const l=document.getElementById('app-loader'); if(l)l.style.opacity='0'; setTimeout(()=>l.style.display='none',600) }, 2000);
 
-        // FUNGSI CHART GLOBAL (Refined Aesthetics)
         function updateChartDisplay(labels, data1, data2) {
             const ctx = document.getElementById('mainChart');
             if(!ctx) return;
@@ -321,7 +343,7 @@
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
-                    animation: { duration: 800, easing: 'easeOutQuart' },
+                    animation: { duration: 1000, easing: 'easeOutQuart' },
                     plugins: { legend: { display: false } },
                     scales: {
                         y: { beginAtZero: true, max: 100, grid: { color: '#F0EBE7', borderDash: [8, 8], drawBorder: false }, ticks: { callback: val => val + '%', font: {size: 11} } },
@@ -339,7 +361,7 @@
                 dbReady: false, activeTab: 'harian',
                 
                 myData: [], dataIchwan: [], dataAiko: [],
-                aggIchwan: 0, aggAiko: 0, // Nilai Agregat untuk Tab Non-Harian
+                aggIchwan: 0, aggAiko: 0,
 
                 users: { "ichwan ramadhanil": { pin: "17122000", role: "suami", name: "Ichwan" }, "aikokita": { pin: "21062002", role: "istri", name: "Aiko" } },
                 amalanList: [ { id: 1, text: "Ngaji 2 Halaman" }, { id: 2, text: "Baca Al Waqiah" }, { id: 3, text: "Qiyamul Lail" }, { id: 4, text: "Sholat Dhuha" }, { id: 5, text: "Al Matsurat Pagi" }, { id: 6, text: "Al Matsurat Petang" }, { id: 7, text: "Sedekah" } ],
@@ -355,10 +377,11 @@
                     return Math.round((this.dataAiko.length / 7) * 100); 
                 },
                 get jointScore() { return Math.round((this.currentIchwanVal + this.currentAikoVal) / 2); },
-                get formattedDate() { return new Date(this.currentDate).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); },
+                get formattedDate() { return moment(this.currentDate).format('dddd, D MMMM YYYY'); },
                 get todayHadith() { const day = new Date(this.currentDate).getDate(); return this.hadithCollection[day % this.hadithCollection.length]; },
 
                 init() {
+                    moment.locale('id');
                     let checkDB = setInterval(() => {
                         if(window.db && window.fb) {
                             this.dbReady = true; clearInterval(checkDB);
@@ -369,9 +392,10 @@
 
                 startSession() { this.$nextTick(() => { this.fetchData(); }); },
 
-                // --- LOGIKA AGREGASI DATA YANG AKURAT ---
+                // --- DATA ENGINE YANG DIPERBAIKI ---
                 async switchTab(tab) {
                     this.activeTab = tab;
+                    
                     if (tab === 'harian') {
                         updateChartDisplay(['Ichwan', 'Aiko'], [this.currentIchwanVal, 0], [0, this.currentAikoVal]);
                         return;
@@ -380,58 +404,69 @@
                     if (!window.db) return;
                     const { collection, query, where, getDocs } = window.fb;
                     
-                    let startDate = new Date();
-                    let labels = [];
-                    
+                    // Setup Rentang & Labels
+                    let labels = [], dataI = [], dataA = [];
+                    let startDate = moment();
+
                     if (tab === 'pekanan') {
-                        startDate.setDate(startDate.getDate() - 6);
-                        for (let i=0; i<7; i++) { let d = new Date(); d.setDate(d.getDate() - (6-i)); labels.push(d.toLocaleDateString('id-ID', {weekday:'short'})); }
+                        startDate = moment().subtract(6, 'days');
+                        for (let i=0; i<7; i++) { labels.push(moment().subtract(6-i, 'days').format('ddd')); }
                     } else if (tab === 'bulanan') {
-                        startDate.setDate(startDate.getDate() - 30);
-                        labels = ['Pekan 1', 'Pekan 2', 'Pekan 3', 'Pekan 4'];
+                        startDate = moment().subtract(29, 'days');
+                        labels = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'];
                     } else if (tab === 'tahunan') {
-                        startDate = new Date(new Date().getFullYear(), 0, 1);
+                        startDate = moment().startOf('year');
                         labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
                     }
 
-                    const startStr = startDate.toISOString().split('T')[0];
-                    const q = query(collection(window.db, "daily_logs"), where("date", ">=", startStr));
-                    const querySnapshot = await getDocs(q);
-
-                    let totalI = 0, countI = 0, totalA = 0, countA = 0;
-                    // Array untuk menampung data chart (sementara diisi 0 semua)
-                    let chartDataI = new Array(labels.length).fill(0);
-                    let chartDataA = new Array(labels.length).fill(0);
-
-                    querySnapshot.forEach((doc) => {
-                        const data = doc.data();
-                        if (data.suami) { totalI += (data.suami.length / 7) * 100; countI++; }
-                        if (data.istri) { totalA += (data.istri.length / 7) * 100; countA++; }
-                        
-                        // Logika sederhana untuk mengisi chart (Perlu logika tanggal yang lebih kompleks untuk mapping presisi, 
-                        // tapi ini cukup untuk menunjukkan data real yang ada)
-                        // Jika pekanan, kita coba mapping ke hari yang tepat jika memungkinkan, jika tidak, ratakan.
-                        if (tab === 'pekanan') {
-                             // *Catatan: Mapping tanggal ke index array memerlukan parsing tanggal yang lebih dalam.
-                             // Untuk kesederhanaan dan akurasi rata-rata, kita gunakan nilai rata-rata untuk visualisasi chart juga.
-                        }
-                    });
-
-                    // Hitung Rata-rata Sebenarnya (Hanya dibagi dengan jumlah hari yang ADA datanya)
-                    this.aggIchwan = countI > 0 ? Math.round(totalI / countI) : 0;
-                    this.aggAiko = countA > 0 ? Math.round(totalA / countA) : 0;
-
-                    // Update Chart dengan nilai rata-rata real-time
-                    // (Visualisasi chart batang diisi dengan nilai rata-rata ini agar representatif)
-                    chartDataI.fill(this.aggIchwan);
-                    chartDataA.fill(this.aggAiko);
+                    const q = query(collection(window.db, "daily_logs"), where("date", ">=", startDate.format('YYYY-MM-DD')));
+                    const snapshot = await getDocs(q);
                     
-                    updateChartDisplay(labels, chartDataI, chartDataA);
+                    // --- MAPPING DATA PRESISI ---
+                    let rawData = {};
+                    snapshot.forEach(doc => { rawData[doc.data().date] = doc.data(); });
+
+                    // Isi Data Grafik Berdasarkan Tanggal
+                    if (tab === 'pekanan') {
+                        for (let i=0; i<7; i++) {
+                            let dateKey = moment().subtract(6-i, 'days').format('YYYY-MM-DD');
+                            let dayData = rawData[dateKey];
+                            dataI.push(dayData && dayData.suami ? Math.round((dayData.suami.length/7)*100) : 0);
+                            dataA.push(dayData && dayData.istri ? Math.round((dayData.istri.length/7)*100) : 0);
+                        }
+                    } else {
+                        // Sederhanakan untuk bulanan/tahunan (Average Logic)
+                        // Untuk saat ini kita pakai rata-rata dari data yang ada agar tidak 0 semua
+                        let totalI = 0, countI = 0, totalA = 0, countA = 0;
+                        Object.values(rawData).forEach(d => {
+                            if(d.suami) { totalI += (d.suami.length/7)*100; countI++; }
+                            if(d.istri) { totalA += (d.istri.length/7)*100; countA++; }
+                        });
+                        let avgI = countI ? Math.round(totalI/countI) : 0;
+                        let avgA = countA ? Math.round(totalA/countA) : 0;
+                        
+                        // Isi chart dengan nilai rata-rata (simulasi visual jika data kurang)
+                        dataI = new Array(labels.length).fill(avgI);
+                        dataA = new Array(labels.length).fill(avgA);
+                    }
+
+                    // Update Nilai Agregat untuk Card
+                    let sumI = dataI.reduce((a,b)=>a+b,0); let sumA = dataA.reduce((a,b)=>a+b,0);
+                    // Filter 0 untuk rata-rata yang adil
+                    let validCountI = dataI.filter(v=>v>0).length || 1;
+                    let validCountA = dataA.filter(v=>v>0).length || 1;
+                    
+                    this.aggIchwan = Math.round(sumI / (tab==='pekanan' ? validCountI : labels.length));
+                    this.aggAiko = Math.round(sumA / (tab==='pekanan' ? validCountA : labels.length));
+
+                    updateChartDisplay(labels, dataI, dataA);
                 },
 
                 login() {
-                    const u = this.loginForm.username.toLowerCase().trim(); const p = this.loginForm.pin;
-                    if(!this.users[u]) return alert("Username salah"); if(this.users[u].pin !== p) return alert("PIN salah");
+                    const u = this.loginForm.username.toLowerCase().trim();
+                    const p = this.loginForm.pin;
+                    if(!this.users[u]) return alert("Username salah");
+                    if(this.users[u].pin !== p) return alert("PIN salah");
                     this.currentSession = { role: this.users[u].role, name: this.users[u].name };
                     localStorage.setItem('ay_session', JSON.stringify(this.currentSession));
                     this.startSession();
