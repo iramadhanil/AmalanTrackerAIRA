@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AIRAYaumi Tracker - Final Ethereal</title>
+    <title>AIRAYaumi Tracker</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
                 },
                 extend: {
                     colors: {
-                        bg: '#F9F6F0', // Linen Lembut
+                        bg: '#F9F6F0', 
                         surface: '#FFFFFF',
                         ink: { 900: '#4A4238', 600: '#7D7468', 400: '#A8A196', border: '#EBE5DE' },
                         sage: { 100: '#E4E9E2', 500: '#7F9C96', 600: '#5F7D77' },
@@ -33,16 +33,16 @@
                         gold: '#BFA588'
                     },
                     boxShadow: {
-                        'soft': '0 10px 30px -10px rgba(74, 66, 56, 0.08)',
-                        'hover': '0 20px 40px -5px rgba(74, 66, 56, 0.12)',
-                        'card': '0 4px 20px rgba(0,0,0,0.03)'
+                        'soft': '0 10px 40px -10px rgba(74, 66, 56, 0.08)',
+                        'hover': '0 20px 40px -5px rgba(74, 66, 56, 0.15)',
+                        'glow': '0 0 15px rgba(191, 165, 136, 0.3)'
                     },
                     animation: {
-                        'drift-slow': 'drift 20s infinite linear',
-                        'drift-medium': 'drift 15s infinite linear reverse',
+                        'drift': 'drift 20s infinite linear',
+                        'drift-rev': 'drift 15s infinite linear reverse',
                     },
                     keyframes: {
-                        drift: { '0%': { transform: 'translate(0, 0)' }, '100%': { transform: 'translate(50px, -50px)' } }
+                        drift: { '0%': { transform: 'translate(0, 0)' }, '100%': { transform: 'translate(30px, -30px)' } }
                     }
                 }
             }
@@ -53,14 +53,35 @@
         body { background-color: #F9F6F0; color: #4A4238; overflow-x: hidden; overflow-y: auto; -webkit-font-smoothing: antialiased; }
         .font-arabic { font-family: 'Amiri', serif; line-height: 2.2; direction: rtl; }
         
-        /* === AMBIENT BACKGROUND ANIMATION === */
+        /* === ANIMASI INTERAKTIF HALUS === */
+        .card-hover {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, border-color 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -5px rgba(74, 66, 56, 0.12);
+            border-color: rgba(127, 156, 150, 0.3); /* Sage hint */
+        }
+        
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .btn-hover:active {
+            transform: scale(0.97);
+        }
+
+        /* === LATAR BELAKANG AMBIENT === */
         .bg-particle {
             position: absolute; border-radius: 50%;
-            background: radial-gradient(circle, rgba(125, 116, 104, 0.1) 0%, rgba(249, 246, 240, 0) 70%);
+            background: radial-gradient(circle, rgba(125, 116, 104, 0.08) 0%, rgba(249, 246, 240, 0) 70%);
             pointer-events: none; mix-blend-mode: multiply;
         }
 
-        /* === REALISTIC FLUID WAVES (Dual Layer) === */
+        /* === LIQUID WAVES === */
         .liquid-container {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 120%;
             background: linear-gradient(to top, #A67067 0%, #7F9C96 100%);
@@ -71,20 +92,20 @@
             position: absolute; bottom: 98%; left: 0; width: 200%; height: 50px;
             background-repeat: repeat-x; background-position: 0 bottom; transform-origin: center bottom;
         }
-        /* Lapisan Belakang (Lebih lambat, lebih transparan) */
         .wave-back {
             opacity: 0.5; animation: move-wave 10s linear infinite;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%23F9F6F0'/%3E%3C/svg%3E");
         }
-        /* Lapisan Depan (Lebih cepat) */
         .wave-front {
             opacity: 1; animation: move-wave 7s linear infinite reverse;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%23F9F6F0'/%3E%3C/svg%3E");
         }
-        @keyframes move-wave { 0% { transform: translateX(0) scaleY(1); } 50% { transform: translateX(-25%) scaleY(0.8); } 100% { transform: translateX(-50%) scaleY(1); } }
+        @keyframes move-wave { 0% { transform: translateX(0) scaleY(1); } 50% { transform: translateX(-25%) scaleY(0.9); } 100% { transform: translateX(-50%) scaleY(1); } }
 
         /* === HEART MASK === */
-        .heart-wrapper { width: 160px; height: 160px; position: relative; margin: 0 auto; }
+        .heart-wrapper { width: 160px; height: 160px; position: relative; margin: 0 auto; transition: transform 0.5s ease; }
+        .group:hover .heart-wrapper { transform: scale(1.05); } /* Zoom on hover */
+        
         .heart-mask {
             width: 100%; height: 100%;
             mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
@@ -93,10 +114,6 @@
             background: #F0EBE5; position: relative; overflow: hidden; border-radius: 0 0 100px 100px;
         }
 
-        /* Interactions */
-        .anim-card { transition: all 0.3s ease-out; }
-        .anim-card:hover { transform: translateY(-6px); box-shadow: 0 15px 30px -5px rgba(74, 66, 56, 0.1); }
-        
         /* Progress Bar Waves */
         .progress-wave-fill { position: relative; overflow: hidden; height: 100%; transition: width 1s ease-out; }
         .progress-wave { position: absolute; top: 0; left: 0; width: 200%; height: 100%; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.3' fill='%23FFFFFF'/%3E%3C/svg%3E"); background-size: 50% 100%; animation: move-wave 12s linear infinite; }
@@ -105,8 +122,8 @@
 <body class="antialiased min-h-screen bg-bg text-ink-900 relative font-sans selection:bg-sage-100 selection:text-sage-600">
 
     <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div class="bg-particle w-96 h-96 -top-20 -left-20 animate-drift-slow opacity-30"></div>
-        <div class="bg-particle w-[500px] h-[500px] bottom-0 -right-32 animate-drift-medium opacity-20"></div>
+        <div class="bg-particle w-[600px] h-[600px] -top-32 -left-32 animate-drift opacity-40"></div>
+        <div class="bg-particle w-[500px] h-[500px] bottom-0 -right-32 animate-drift-rev opacity-30"></div>
     </div>
 
     <div id="app-loader" class="fixed inset-0 z-[100] bg-bg flex flex-col items-center justify-center transition-opacity duration-700">
@@ -120,7 +137,7 @@
     <div x-data="coupleApp" x-cloak class="relative z-10 flex flex-col md:flex-row min-h-screen">
 
         <div x-show="!currentSession.role" class="fixed inset-0 z-[60] flex items-center justify-center bg-ink-900/20 backdrop-blur-md transition-all duration-500 p-4">
-            <div class="bg-surface p-12 rounded-[2.5rem] shadow-xl w-full max-w-sm text-center relative anim-card border border-white/60">
+            <div class="bg-surface p-12 rounded-[2.5rem] shadow-xl w-full max-w-sm text-center relative card-hover border border-white/60">
                 <div class="mb-10">
                     <h2 class="text-4xl font-bold text-ink-900 font-serif tracking-tight mb-2">AIRAYaumi</h2>
                     <p class="text-ink-600 text-sm font-sans tracking-wide uppercase">Tracker Ibadah Pasangan</p>
@@ -129,45 +146,46 @@
                 <div class="space-y-6 text-left">
                     <div>
                         <label class="text-[11px] font-bold text-ink-600 uppercase tracking-widest ml-1 mb-2 block">Username</label>
-                        <input type="text" x-model="loginForm.username" placeholder="Ichwan / Aiko" class="w-full bg-bg border border-ink-border/50 rounded-2xl px-5 py-4 text-sm focus:border-sage-500 focus:ring-1 focus:ring-sage-200 focus:outline-none transition-all font-medium text-ink-900 placeholder-ink-400 shadow-sm">
+                        <input type="text" x-model="loginForm.username" placeholder="Ichwan / Aiko" class="w-full bg-bg border border-ink-border/50 rounded-2xl px-5 py-4 text-sm focus:border-sage-500 focus:ring-1 focus:ring-sage-200 focus:outline-none transition-all font-medium text-ink-900 placeholder-ink-400 shadow-sm hover:bg-white transition-colors">
                     </div>
                     <div>
                         <label class="text-[11px] font-bold text-ink-600 uppercase tracking-widest ml-1 mb-2 block">PIN</label>
-                        <input type="password" x-model="loginForm.pin" placeholder="••••••••" class="w-full bg-bg border border-ink-border/50 rounded-2xl px-5 py-4 text-sm text-center tracking-[0.5em] focus:border-rose-500 focus:ring-1 focus:ring-rose-200 focus:outline-none transition-all font-bold text-ink-900 placeholder-ink-400 shadow-sm">
+                        <input type="password" x-model="loginForm.pin" placeholder="••••••••" class="w-full bg-bg border border-ink-border/50 rounded-2xl px-5 py-4 text-sm text-center tracking-[0.5em] focus:border-rose-500 focus:ring-1 focus:ring-rose-200 focus:outline-none transition-all font-bold text-ink-900 placeholder-ink-400 shadow-sm hover:bg-white transition-colors">
                     </div>
-                    <button @click="login()" class="w-full bg-gradient-to-r from-sage-600 to-rose-600 hover:from-sage-500 hover:to-rose-500 text-white font-bold py-4 rounded-2xl transition-all duration-300 shadow-lg shadow-sage-500/20 mt-6 transform active:scale-95 tracking-wide">
+                    <button @click="login()" class="w-full bg-gradient-to-r from-sage-600 to-rose-600 hover:from-sage-500 hover:to-rose-500 text-white font-bold py-4 rounded-2xl transition-all duration-300 shadow-lg shadow-sage-500/20 mt-6 btn-hover tracking-wide">
                         Masuk Aplikasi
                     </button>
                 </div>
             </div>
         </div>
 
-        <aside x-show="currentSession.role" class="hidden md:flex w-72 bg-surface border-r border-ink-border/60 flex-col justify-between sticky top-0 h-screen z-20 shadow-[5px_0_20px_-5px_rgba(0,0,0,0.03)]">
+        <aside x-show="currentSession.role" class="hidden md:flex w-72 bg-surface border-r border-ink-border/60 flex-col justify-between sticky top-0 h-screen z-20 shadow-[5px_0_30px_-10px_rgba(0,0,0,0.02)]">
             <div class="p-8">
                 <div class="flex items-center space-x-3 mb-12">
-                    <div class="w-9 h-9 bg-gradient-to-br from-sage-500 to-rose-500 rounded-xl shadow-sm flex items-center justify-center text-white"><i class="fas fa-heart"></i></div>
-                    <span class="font-bold text-xl tracking-tight text-ink-900 font-serif">AIRA<span class="text-sage-600">Yaumi</span></span>
+                    <div class="w-10 h-10 bg-gradient-to-br from-sage-500 to-rose-500 rounded-xl shadow-md flex items-center justify-center text-white"><i class="fas fa-heart text-lg"></i></div>
+                    <span class="font-bold text-2xl tracking-tight text-ink-900 font-serif">AIRA<span class="text-sage-600">Yaumi</span></span>
                 </div>
-                <div class="mb-10 p-4 rounded-2xl bg-bg border border-ink-border/50 flex items-center space-x-3 shadow-sm">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-sage-500 to-sage-600 flex items-center justify-center text-white shadow-sm text-lg font-bold font-serif">
+                <div class="mb-10 p-5 rounded-2xl bg-bg border border-ink-border/50 flex items-center space-x-4 shadow-sm card-hover cursor-pointer">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-sage-500 to-sage-600 flex items-center justify-center text-white shadow-sm text-lg font-bold font-serif border-2 border-white">
                         <span x-text="getDisplayName()[0]"></span>
                     </div>
-                    <div class="flex-1 text-left"> <p class="text-[11px] text-ink-600 font-arabic mb-0.5 leading-none">السلام عليكم</p>
+                    <div class="flex-1 text-left">
+                        <p class="text-[11px] text-ink-600 font-arabic mb-0.5 leading-none">السلام عليكم</p>
                         <h3 class="text-sm font-bold text-ink-900 capitalize" x-text="getDisplayName()"></h3>
                     </div>
                 </div>
-                <div class="space-y-3">
+                <div class="space-y-4">
                     <label class="text-[11px] text-ink-600 font-bold uppercase tracking-widest ml-1">Timeline</label>
-                    <div class="flex items-center bg-bg rounded-2xl border border-ink-border/50 p-1.5 shadow-sm">
-                        <button @click="changeDate(-1)" class="w-10 h-10 flex items-center justify-center text-ink-600 hover:bg-surface rounded-xl transition"><i class="fas fa-chevron-left"></i></button>
+                    <div class="flex items-center bg-bg rounded-2xl border border-ink-border/50 p-1.5 shadow-inner">
+                        <button @click="changeDate(-1)" class="w-10 h-10 flex items-center justify-center text-ink-600 hover:bg-surface hover:shadow-sm rounded-xl transition btn-hover"><i class="fas fa-chevron-left"></i></button>
                         <input type="date" x-model="currentDate" @change="fetchData()" class="bg-transparent border-none text-sm text-center w-full focus:outline-none text-ink-900 font-mono font-bold cursor-pointer">
-                        <button @click="changeDate(1)" class="w-10 h-10 flex items-center justify-center text-ink-600 hover:bg-surface rounded-xl transition"><i class="fas fa-chevron-right"></i></button>
+                        <button @click="changeDate(1)" class="w-10 h-10 flex items-center justify-center text-ink-600 hover:bg-surface hover:shadow-sm rounded-xl transition btn-hover"><i class="fas fa-chevron-right"></i></button>
                     </div>
                     <p class="text-xs text-center text-sage-600 font-medium opacity-80 font-serif italic" x-text="formattedDate"></p>
                 </div>
             </div>
             <div class="p-6 border-t border-ink-border/50">
-                <button @click="logout()" class="flex items-center justify-center text-ink-600 hover:text-rose-600 transition text-sm space-x-2 w-full p-4 rounded-2xl font-bold tracking-wide hover:bg-rose-50/50">
+                <button @click="logout()" class="flex items-center justify-center text-ink-600 hover:text-rose-600 transition text-sm space-x-2 w-full p-4 rounded-2xl font-bold tracking-wide hover:bg-rose-50/50 btn-hover">
                     <i class="fas fa-sign-out-alt"></i> <span>Keluar</span>
                 </button>
             </div>
@@ -183,12 +201,12 @@
                             <p class="text-[10px] text-sage-600 font-arabic">السلام عليكم</p>
                             <p class="text-xs font-bold text-ink-900 capitalize" x-text="getDisplayName()"></p>
                         </div>
-                        <button @click="logout()" class="w-9 h-9 rounded-full bg-bg text-ink-600 border border-ink-border/50 flex items-center justify-center">
+                        <button @click="logout()" class="w-10 h-10 rounded-full bg-bg text-ink-600 border border-ink-border/50 flex items-center justify-center btn-hover">
                             <i class="fas fa-sign-out-alt text-xs"></i>
                         </button>
                     </div>
                 </div>
-                <div class="flex items-center justify-between bg-bg rounded-xl p-1 border border-ink-border/50 shadow-sm">
+                <div class="flex items-center justify-between bg-bg rounded-xl p-1 border border-ink-border/50 shadow-inner">
                      <button @click="changeDate(-1)" class="w-10 h-10 text-ink-600"><i class="fas fa-chevron-left"></i></button>
                      <div class="text-center">
                          <input type="date" x-model="currentDate" @change="fetchData()" class="bg-transparent border-none text-xs text-center w-28 text-ink-900 font-bold p-0 focus:outline-none">
@@ -203,7 +221,7 @@
                 <div class="md:col-span-5 lg:col-span-4 space-y-6">
                     <div class="flex items-end justify-between px-2">
                         <h2 class="text-2xl font-bold text-ink-900 font-serif">Ibadah Harian</h2>
-                        <span class="text-[10px] text-sage-600 font-bold tracking-widest uppercase border border-sage-200 px-2.5 py-1 rounded-full bg-sage-50">Hari Ini</span>
+                        <span class="text-[10px] text-sage-600 font-bold tracking-widest uppercase border border-sage-200 px-3 py-1 rounded-full bg-sage-50">Hari Ini</span>
                     </div>
 
                     <div class="w-full bg-bg rounded-full h-3 overflow-hidden shadow-inner border border-ink-border/30">
@@ -216,21 +234,23 @@
                         <template x-for="item in amalanList" :key="item.id">
                             <div 
                                 @click="toggleAmalan(item.id)"
-                                class="anim-card group flex items-center justify-between p-5 rounded-2xl border cursor-pointer select-none relative overflow-hidden bg-surface shadow-card"
-                                :class="isChecked(item.id) ? 'border-sage-200 bg-sage-50/50' : 'border-transparent hover:border-ink-border/30'"
+                                class="card-hover group flex items-center justify-between p-5 rounded-2xl border cursor-pointer select-none relative overflow-hidden bg-surface shadow-card"
+                                :class="isChecked(item.id) ? 'border-sage-200 bg-sage-50/30' : 'border-transparent hover:border-ink-border/30 hover:bg-white'"
                             >
                                 <div class="absolute left-0 top-0 bottom-0 w-1 transition-all duration-300"
                                      :class="isChecked(item.id) ? 'bg-sage-500' : 'bg-transparent'"></div>
+
                                 <div class="flex items-center space-x-5 pl-3 relative z-10">
                                     <div class="w-6 h-6 rounded-md border flex items-center justify-center transition-all duration-300"
-                                         :class="isChecked(item.id) ? 'bg-sage-500 border-sage-500 shadow-sm' : 'border-ink-300 bg-bg group-hover:border-sage-400'">
+                                         :class="isChecked(item.id) ? 'bg-sage-500 border-sage-500 shadow-sm scale-110' : 'border-ink-300 bg-bg group-hover:border-sage-400'">
                                         <i class="fas fa-check text-white text-[10px]" x-show="isChecked(item.id)"></i>
                                     </div>
                                     <span class="text-sm font-medium transition-colors duration-300" 
                                           :class="isChecked(item.id) ? 'text-ink-900 font-bold' : 'text-ink-600 group-hover:text-ink-900'" 
                                           x-text="item.text"></span>
                                 </div>
-                                <i :class="item.icon" class="absolute right-6 top-1/2 -translate-y-1/2 text-5xl text-ink-900 opacity-[0.04] pointer-events-none group-hover:scale-110 transition-transform duration-500"></i>
+
+                                <i :class="item.icon" class="absolute right-6 top-1/2 -translate-y-1/2 text-5xl text-ink-900 opacity-[0.03] pointer-events-none group-hover:scale-110 group-hover:rotate-6 transition-all duration-500"></i>
                             </div>
                         </template>
                     </div>
@@ -238,17 +258,17 @@
 
                 <div class="md:col-span-7 lg:col-span-8 space-y-6">
                     
-                    <div class="flex space-x-1 bg-surface p-1.5 rounded-2xl border border-ink-border/30 w-fit shadow-sm overflow-x-auto mx-auto md:mx-0">
+                    <div class="flex space-x-2 bg-surface p-2 rounded-2xl border border-ink-border/30 w-fit shadow-sm overflow-x-auto mx-auto md:mx-0">
                         <template x-for="tab in ['harian', 'pekanan', 'bulanan']">
                             <button @click="switchTab(tab)" 
-                                    :class="activeTab === tab ? 'bg-ink-900 text-white shadow-soft' : 'text-ink-600 hover:bg-bg hover:text-ink-900'" 
-                                    class="px-6 py-2 rounded-xl text-xs font-bold transition-all duration-300 capitalize tracking-wide" x-text="tab"></button>
+                                    :class="activeTab === tab ? 'bg-ink-900 text-white shadow-lg' : 'text-ink-600 hover:bg-bg hover:text-ink-900'" 
+                                    class="px-6 py-2 rounded-xl text-xs font-bold transition-all duration-300 capitalize tracking-wide btn-hover" x-text="tab"></button>
                         </template>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         
-                        <div class="anim-card bg-surface p-8 rounded-[2.5rem] border border-white shadow-soft flex flex-col items-center justify-center text-center relative overflow-hidden group">
+                        <div class="card-hover bg-surface p-8 rounded-[2.5rem] border border-white shadow-soft flex flex-col items-center justify-center text-center relative overflow-hidden group">
                             <h3 class="text-[11px] font-bold text-ink-600 uppercase tracking-[0.2em] mb-6">Sinergi Hati</h3>
                             
                             <div class="heart-wrapper mb-4">
@@ -291,11 +311,15 @@
                             </div>
                         </div>
 
-                        <div class="anim-card bg-ink-900 p-8 rounded-[2.5rem] shadow-soft border border-ink-900 flex flex-col justify-center relative overflow-hidden text-white group relative">
+                        <div class="card-hover bg-ink-900 p-8 rounded-[2.5rem] shadow-soft border border-ink-900 flex flex-col justify-center relative overflow-hidden text-white group">
                             <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] pointer-events-none"></div>
+                            
                             <span class="inline-block px-3 py-1 bg-white/10 text-gold text-[10px] font-bold uppercase rounded-full mb-6 w-max border border-white/20 tracking-wider shadow-sm relative z-10">Daily Wisdom</span>
+                            
                             <p class="font-arabic text-2xl md:text-3xl text-right mb-6 leading-relaxed text-white drop-shadow-sm min-h-[80px] flex items-center justify-end relative z-10" x-text="dailyHadith.arab"></p>
+                            
                             <p class="font-sans text-sm text-ink-300 italic leading-relaxed border-l-2 border-gold/50 pl-4 relative z-10" x-text="`&quot;` + dailyHadith.text + `&quot;`"></p>
+                            
                             <p class="text-xs text-gold mt-6 font-bold uppercase tracking-widest text-right flex items-center justify-end gap-2 relative z-10">
                                 <span class="w-8 h-[1px] bg-gold/50"></span>
                                 <span x-text="dailyHadith.source"></span>
@@ -303,7 +327,7 @@
                         </div>
                     </div>
 
-                    <div class="anim-card bg-surface p-8 rounded-[2.5rem] border border-white shadow-soft">
+                    <div class="card-hover bg-surface p-8 rounded-[2.5rem] border border-white shadow-soft">
                         <div class="flex justify-between items-center mb-8">
                             <h3 class="font-bold text-ink-900 text-lg font-serif">Statistik <span class="capitalize text-sage-600 ml-1" x-text="activeTab"></span></h3>
                             <div class="flex space-x-6 text-xs font-bold">
